@@ -7,5 +7,3 @@ dist-ssr/
 .env
 .env.*
 
-# Автосборка GitHub Actions: включить после `gh auth refresh -s workflow`
-.github/workflows/
