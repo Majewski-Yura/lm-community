@@ -1,0 +1,208 @@
+@import "tailwindcss";
+
+/* Шрифты лежат в public/fonts: TildaSans — вариативный (250–1000), Inter — вариативный 400–700. */
+@font-face {
+  font-family: 'TildaSans';
+  font-style: normal;
+  font-weight: 250 1000;
+  font-display: swap;
+  src: url('/fonts/TildaSans-VF.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('/fonts/Inter-cyrillic.woff2') format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('/fonts/Inter-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@layer base {
+  :root {
+    --t-headline-font: 'TildaSans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+    --t-text-font: 'Inter', 'TildaSans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+  }
+
+  html {
+    font-family: var(--t-text-font);
+    scroll-behavior: smooth;
+    background-color: #020201;
+    color: #ffffff;
+  }
+
+  body {
+    overflow-x: hidden;
+    margin: 0;
+    padding: 0;
+  }
+
+  h1, h2, h3, .font-headline {
+    font-family: var(--t-headline-font);
+  }
+
+  /* Без висячих строк: заголовки — ровными строками, в абзацах последнее слово не остаётся одно.
+     Предлоги и союзы привязаны к следующему слову неразрывными пробелами прямо в текстах. */
+  h1, h2, h3 {
+    text-wrap: balance;
+  }
+
+  p, li, blockquote, figcaption, dd {
+    text-wrap: pretty;
+  }
+
+  /* Короткие тексты в карточках и подписях — ровными строками: так последнее слово
+     не остаётся одно даже там, где длинную пару слов нельзя склеить (узкие карточки) */
+  article p, li, blockquote, figcaption, h3, span, a, button, div:not(:has(*)) {
+    text-wrap: balance;
+  }
+}
+
+@keyframes btnRipple {
+  0% {
+    opacity: 0.55;
+    transform: translateX(-120%) skewX(-20deg);
+  }
+  22% {
+    opacity: 0;
+    transform: translateX(260%) skewX(-20deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(260%) skewX(-20deg);
+  }
+}
+
+.lm-btn-ripple {
+  position: relative;
+  overflow: hidden;
+}
+
+.lm-btn-ripple::after {
+  content: "";
+  position: absolute;
+  top: -25%;
+  left: 0;
+  width: 45%;
+  height: 150%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.65), transparent);
+  animation: btnRipple 6s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.lm-fade-up {
+  animation: fadeInUp 0.65s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Служебный маркер: по нему окно экспорта находит собранные стили на странице */
+.lm-css-marker {
+  --lm-css-marker: 1;
+}
+
+/* ===== Анимации: каскад на первом экране, появление блоков при прокрутке, параллакс фото ===== */
+@keyframes lmHeroZoom {
+  from { transform: scale(1.14); }
+  to { transform: scale(1.02); }
+}
+
+@keyframes lmHeroIn {
+  from { opacity: 0; transform: translateY(24px); filter: blur(6px); }
+  to { opacity: 1; transform: none; filter: none; }
+}
+
+.lm-hero-zoom {
+  transform: scale(1.02);
+  animation: lmHeroZoom 2.6s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+.lm-hero-in {
+  animation: lmHeroIn 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Класс lm-anim ставит скрипт, поэтому без JS (и в готовом HTML для поисковиков) всё видно сразу */
+html.lm-anim .lm-reveal {
+  opacity: 0;
+  transform: translate3d(0, 32px, 0);
+  transition:
+    opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--lm-delay, 0ms);
+}
+
+html.lm-anim .lm-reveal.lm-in {
+  opacity: 1;
+  transform: none;
+}
+
+/* Линия у подписи раздела «вырастает» слева направо */
+html.lm-anim .lm-reveal-line > img:first-child {
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.9s 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+html.lm-anim .lm-reveal-line.lm-in > img:first-child {
+  transform: none;
+}
+
+/* Пункты, открывшиеся по «Показать всех», «Ещё», «Весь месяц», и смена вкладки основателей */
+@keyframes lmPopIn {
+  from { opacity: 0; transform: translateY(14px) scale(0.98); }
+  to { opacity: 1; transform: none; }
+}
+
+.lm-pop-in {
+  animation: lmPopIn 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Плавное раскрытие аккордеона: высота анимируется через строки сетки */
+.lm-collapse {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition:
+    grid-template-rows 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.35s ease;
+}
+
+.lm-collapse.is-open {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+.lm-collapse > * {
+  min-height: 0;
+  overflow: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lm-hero-zoom,
+  .lm-hero-in,
+  .lm-pop-in {
+    animation: none;
+  }
+
+  .lm-collapse {
+    transition: none;
+  }
+}

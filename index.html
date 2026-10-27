@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="ru" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- seo:start -->
+    <!-- При сборке scripts/prerender.mjs подставляет сюда title, description, canonical, Open Graph и Schema.org для каждой страницы (данные — src/data/seo.ts). -->
+    <title>Закрытое медицинское сообщество для врачей и руководителей клиник | Люди Медицины</title>
+    <!-- seo:end -->
+    <meta name="theme-color" content="#020201" />
+    <link rel="icon" href="/images/favicon.png" type="image/png" />
+    <link rel="preload" href="/images/hero-community.webp" as="image" type="image/webp" fetchpriority="high" data-home-only />
+    <link rel="preload" href="/fonts/TildaSans-VF.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/Inter-cyrillic.woff2" as="font" type="font/woff2" crossorigin />
+  </head>
+  <body class="bg-[#020201] text-white antialiased selection:bg-[#f9cd60] selection:text-[#020201]">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
