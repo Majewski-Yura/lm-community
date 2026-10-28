@@ -11,7 +11,7 @@ interface SubpageShellProps {
   onNavigateAnchor: (href: string) => void;
   onOpenLegal: (slug: string) => void;
   children: React.ReactNode;
-  /** Светлая страница (записи блога): бежевая шапка и светлый фон. */
+  /** Светлая страница (записи блога): всё на одном светлом фоне. */
   light?: boolean;
 }
 
@@ -29,7 +29,7 @@ export const SubpageShell: React.FC<SubpageShellProps> = ({
   <div className={`min-h-screen flex flex-col ${light ? 'bg-[#faf7f1] text-[#020201]' : 'bg-[#020201] text-white'}`}>
     <div
       className={`pt-[108px] pb-[48px] px-4 sm:px-6 border-b ${
-        light ? 'border-[#020201]/10 bg-[#eee6d7]' : 'border-white/10 bg-gradient-to-b from-[#1b1814] to-[#020201]'
+        light ? 'border-transparent pb-0!' : 'border-white/10 bg-gradient-to-b from-[#1b1814] to-[#020201]'
       }`}
     >
       <div className="max-w-[960px] mx-auto">
