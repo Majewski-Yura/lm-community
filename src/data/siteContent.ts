@@ -76,7 +76,7 @@ export const INTRO_VIDEO_EMBED_URL: string = C.video.embedUrl;
 
 /** Картинки оформления (логотипы, линии, иконки) — не меняются в админке. */
 export const ASSETS = {
-  headerLogo: withBase('/images/Logo.svg'),
+  headerLogo: withBase('/images/logo-yellow.svg'),
   footerLogo: withBase('/images/d8d0282b.svg'),
   heroWordmark: withBase('/images/0753a3e6.svg'),
   heroCrowdPhoto: img(C.hero.photo) ?? withBase('/images/hero-community.webp'),

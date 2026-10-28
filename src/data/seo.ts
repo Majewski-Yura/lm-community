@@ -139,7 +139,7 @@ export function homeStructuredData() {
         '@id': org,
         name: SITE_NAME,
         url: SITE_URL,
-        logo: `${SITE_URL}/images/Logo.svg`,
+        logo: `${SITE_URL}/images/logo-yellow.svg`,
         description: HOME_META.description,
         founder: FOUNDERS.map((f) => ({
           '@type': 'Person',
