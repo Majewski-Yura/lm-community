@@ -21,6 +21,8 @@ export interface FeatureCard {
   description: string;
   frequency: string;
   icon: string;
+  /** Фото с мероприятий сообщества — если есть, карточка показывается с фотографией вместо иконки. */
+  photo?: string;
 }
 
 export interface SingleTariff {
@@ -103,7 +105,6 @@ export const ASSETS = {
 
 export const NAV_LINKS = [
   { label: 'Для\u00A0кого', href: '#dlyakogo' },
-  { label: 'Видео', href: '#video' },
   { label: 'Участники', href: '#uchastniki' },
   { label: 'Отзывы', href: '#otzyvy' },
   { label: 'Эксперты', href: '#eksperty' },
@@ -213,30 +214,35 @@ export const COMMUNITY_HAS: FeatureCard[] = [
     description: 'Живые встречи и\u00A0обмен энергией. Знакомимся с\u00A0резидентами в\u00A0уютной неформальной обстановке, делимся\u00A0опытом.',
     frequency: 'Раз в\u00A0месяц',
     icon: ASSETS.iconEvents,
+    photo: withBase('/images/community/brunch.webp'),
   },
   {
     title: 'Random Coffee',
     description: 'Каждую неделю возможность познакомиться с\u00A0коллегой, выпить кофе (можно и\u00A0онлайн) и\u00A0спокойно поговорить один на\u00A0один.',
     frequency: 'Раз в\u00A0неделю',
     icon: ASSETS.iconGroups,
+    photo: withBase('/images/community/random-coffee.webp'),
   },
   {
     title: 'Прямые эфиры с\u00A0ведущими экспертами',
     description: 'Реальный опыт и\u00A0рабочие инструменты для\u00A0развития вас, команды или\u00A0клиники: управление, маркетинг, HR, личный бренд, психологическая поддержка и\u00A0пр.',
     frequency: 'Несколько раз в\u00A0неделю',
     icon: ASSETS.iconChannel,
+    photo: withBase('/images/community/efiry.webp'),
   },
   {
     title: 'Экскурсии в\u00A0клиники',
     description: 'Увидеть опыт коллег, посмотреть, как\u00A0устроена другая клиника, задать интересующие вопросы её\u00A0топ-команде и\u00A0собственникам.',
     frequency: 'Раз в\u00A0месяц',
     icon: ASSETS.iconEvents,
+    photo: withBase('/images/community/ekskursii.webp'),
   },
   {
     title: 'Закрытый чат',
     description: 'Смело пишите о\u00A0своей проблеме, просите контакт, спрашивайте, как\u00A0поступали коллеги в\u00A0подобной ситуации. Здесь можно быстро найти нужного человека, рабочий совет и\u00A0настоящую поддержку.',
     frequency: '24/7',
     icon: ASSETS.iconChat,
+    photo: withBase('/images/community/chat.webp'),
   },
 ];
 

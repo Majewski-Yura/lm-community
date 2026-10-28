@@ -33,8 +33,50 @@ const SocialButton: React.FC<{ social: SocialLink }> = ({ social }) => (
 /** Сколько достижений основателя видно на телефоне до нажатия «Ещё». */
 const FOUNDER_HIGHLIGHTS_MOBILE = 3;
 
+const FeatureCardView: React.FC<{ item: FeatureCard; dark?: boolean }> = ({ item, dark }) => (
+  <article
+    className={`group rounded-[16px] overflow-hidden flex flex-col ${dark ? 'bg-white' : 'bg-white border border-[#1a1612]/[0.08]'}`}
+  >
+    {item.photo && (
+      <div className="aspect-[16/10] overflow-hidden bg-[#3c3836]">
+        <img
+          src={item.photo}
+          alt={item.title}
+          loading="lazy"
+          decoding="async"
+          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+        />
+      </div>
+    )}
+    <div className="flex-1 p-6 sm:p-8 flex flex-col justify-between gap-6">
+      <div>
+        {!item.photo && <img src={item.icon} alt="" className="w-6 h-6" />}
+        <h3 className={`${item.photo ? '' : 'mt-5 '}font-headline text-[#020201] text-[19px] font-semibold leading-[1.3]`}>{item.title}</h3>
+        <p className="mt-3 text-[#3c3836] text-[14px] leading-[1.6]">{item.description}</p>
+      </div>
+      <span className="self-start rounded-[4px] bg-[#f9cd60] px-3 py-1 text-[#020201] text-[12px] sm:text-[10px] font-bold tracking-[1.2px] uppercase">
+        {item.frequency}
+      </span>
+    </div>
+  </article>
+);
+
 const FeatureGrid: React.FC<{ items: FeatureCard[]; dark?: boolean }> = ({ items, dark }) => {
   const [open, setOpen] = useState<number | null>(null);
+
+  // Карточки с фото: на телефоне — открытые карточки в карусели со свайпом, с планшета — сетка
+  if (items.some((item) => item.photo)) {
+    return (
+      <MobileSwiper
+        tone={dark ? 'dark' : 'light'}
+        className="mt-7 sm:mt-10 lg:mt-[56px] sm:grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 sm:gap-6"
+      >
+        {items.map((item) => (
+          <FeatureCardView key={item.title} item={item} dark={dark} />
+        ))}
+      </MobileSwiper>
+    );
+  }
 
   return (
     <>
@@ -69,21 +111,7 @@ const FeatureGrid: React.FC<{ items: FeatureCard[]; dark?: boolean }> = ({ items
 
       <div className="hidden sm:grid mt-7 sm:mt-10 lg:mt-[56px] grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {items.map((item) => (
-          <article
-            key={item.title}
-            className={`rounded-[16px] p-7 sm:p-8 flex flex-col justify-between gap-6 ${
-              dark ? 'bg-white' : 'bg-white border border-[#1a1612]/[0.08]'
-            }`}
-          >
-            <div>
-              <img src={item.icon} alt="" className="w-6 h-6" />
-              <h3 className="mt-5 font-headline text-[#020201] text-[19px] font-semibold leading-[1.3]">{item.title}</h3>
-              <p className="mt-3 text-[#3c3836] text-[14px] leading-[1.6]">{item.description}</p>
-            </div>
-            <span className="self-start rounded-[4px] bg-[#f9cd60] px-3 py-1 text-[#020201] text-[12px] sm:text-[10px] font-bold tracking-[1.2px] uppercase">
-              {item.frequency}
-            </span>
-          </article>
+          <FeatureCardView key={item.title} item={item} dark={dark} />
         ))}
       </div>
     </>

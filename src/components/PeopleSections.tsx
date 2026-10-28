@@ -14,7 +14,7 @@ const mobileHidden = (index: number, expanded: boolean) => !expanded && index >=
 /** Фото автора отзыва берём из карточки участника с тем же именем. */
 const participantPhoto = (name: string) => PARTICIPANTS.find((p) => p.name === name)?.photo;
 
-const ShowAllButton: React.FC<{ total: number; onClick: () => void; tone: 'light' | 'white' }> = ({ total, onClick, tone }) => (
+const ShowAllButton: React.FC<{ onClick: () => void; tone: 'light' | 'white' }> = ({ onClick, tone }) => (
   <button
     type="button"
     onClick={onClick}
@@ -22,7 +22,7 @@ const ShowAllButton: React.FC<{ total: number; onClick: () => void; tone: 'light
       tone === 'light' ? 'border-[#020201]/15 bg-white' : 'border-[#1a1612]/[0.12] bg-[#faf7f1]'
     }`}
   >
-    Показать всех&nbsp;({total})
+    Посмотреть ещё
     <ChevronDown className="w-4 h-4" />
   </button>
 );
@@ -63,7 +63,7 @@ export const PeopleSections: React.FC = () => {
             ))}
           </div>
           {!allParticipants && (
-            <ShowAllButton total={PARTICIPANTS.length} onClick={() => setAllParticipants(true)} tone="light" />
+            <ShowAllButton onClick={() => setAllParticipants(true)} tone="light" />
           )}
         </div>
       </div>
