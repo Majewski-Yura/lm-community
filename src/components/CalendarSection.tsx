@@ -235,9 +235,9 @@ export const CalendarSection: React.FC<CalendarSectionProps> = ({ onNavigateAnch
           </div>
 
           {/* Важно! */}
-          <div className="mt-10 rounded-[16px] bg-[#f9cd60] p-6 sm:p-8 flex flex-col sm:flex-row gap-3 sm:gap-6 sm:items-center">
-            <span className="shrink-0 font-headline text-[#020201] text-[24px] sm:text-[28px] font-bold">{C.calendar.importantTitle}</span>
-            <p className="font-headline text-[#020201] text-[17px] sm:text-[20px] font-medium leading-[1.4]">
+          <div className="mt-10 rounded-[16px] border border-[#f9cd60]/35 bg-white/[0.04] p-6 sm:p-8 flex flex-col sm:flex-row gap-3 sm:gap-6 sm:items-center">
+            <span className="shrink-0 font-headline text-[#f9cd60] text-[24px] sm:text-[28px] font-bold">{C.calendar.importantTitle}</span>
+            <p className="font-headline text-white/90 text-[17px] sm:text-[20px] font-medium leading-[1.4]">
               {C.calendar.importantText}
             </p>
           </div>
