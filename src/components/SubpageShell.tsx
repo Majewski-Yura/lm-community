@@ -32,7 +32,7 @@ export const SubpageShell: React.FC<SubpageShellProps> = ({
         light ? 'border-transparent pb-0!' : 'border-white/10 bg-gradient-to-b from-[#1b1814] to-[#020201]'
       }`}
     >
-      <div className="max-w-[960px] mx-auto">
+      <div className="max-w-[1240px] mx-auto">
         <button
           type="button"
           data-lm-home=""
@@ -53,7 +53,7 @@ export const SubpageShell: React.FC<SubpageShellProps> = ({
     </div>
 
     <main className="flex-1 px-4 sm:px-6 py-12 sm:py-16">
-      <div className="max-w-[960px] mx-auto">{children}</div>
+      <div className="max-w-[1240px] mx-auto">{children}</div>
     </main>
 
     <Footer onNavigateAnchor={onNavigateAnchor} onOpenLegal={onOpenLegal} />

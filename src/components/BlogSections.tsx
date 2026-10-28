@@ -88,7 +88,7 @@ export const BlogListPage: React.FC<NavProps> = (nav) => (
     {BLOG_POSTS.length === 0 ? (
       <p className="text-white/70">Скоро здесь появятся первые записи.</p>
     ) : (
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {BLOG_POSTS.map((post) => (
           <PostCard key={post.slug} post={post} onOpen={nav.onOpenLegal} />
         ))}
@@ -105,7 +105,9 @@ export const BlogPostPage: React.FC<NavProps & { post: BlogEntry }> = ({ post, .
     <SubpageShell eyebrow={formatBlogDate(post.date)} title={post.title} meta={post.excerpt} light {...nav}>
       <article>
         {post.coverSrc && <img src={post.coverSrc} alt={post.title} decoding="async" className="w-full rounded-[20px] mb-10 aspect-[16/10] object-cover" />}
-        <Markdown text={post.body} light />
+        <div className="max-w-[820px]">
+          <Markdown text={post.body} light />
+        </div>
       </article>
       <div className="mt-14 pt-8 border-t border-[#020201]/10 flex flex-col sm:flex-row gap-4 justify-between">
         <a {...openLink(BLOG_SLUG, nav.onOpenLegal)} className="inline-flex items-center gap-2 text-[#8c4503] hover:text-[#020201] text-[14px] font-medium">

@@ -44,11 +44,12 @@ export const TariffSection: React.FC = () => {
             <div className="p-6 pt-0 sm:p-10 sm:pt-0 lg:p-12">
               <div className="lg:hidden h-px bg-[#dec69a]/20 mb-6" />
               <div className="text-[#dec69a] text-[12px] font-medium tracking-[2px] uppercase">{C.tariff.featuresTitle}</div>
-              <ul className="mt-5 grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-3.5">
+              {/* Две колонки «газетой»: у каждого пункта одинаковый отступ снизу, без выравнивания по строкам */}
+              <ul className="mt-5 md:columns-2 gap-x-8">
                 {t.features.map((f, i) => (
                   <li
                     key={f}
-                    className={`items-start gap-3 text-white/85 text-[14px] leading-[1.5] ${
+                    className={`mb-3.5 last:mb-0 break-inside-avoid items-start gap-3 text-white/85 text-[14px] leading-[1.5] ${
                       !allFeatures && i >= MOBILE_VISIBLE_FEATURES ? 'hidden sm:flex' : 'flex'
                     } ${allFeatures && i >= MOBILE_VISIBLE_FEATURES ? 'lm-pop-in' : ''}`}
                     style={allFeatures ? { animationDelay: `${(i - MOBILE_VISIBLE_FEATURES) * 50}ms` } : undefined}

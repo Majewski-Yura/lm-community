@@ -26,7 +26,7 @@ export const LegalSubpageView: React.FC<LegalSubpageViewProps> = ({
     <div className="min-h-screen flex flex-col bg-[#ffffff] text-[#020201]">
       {/* Dark Hero Header Band matching Tilda Legal Pages */}
       <div className="bg-[#020201] pt-[108px] pb-[56px] px-4 sm:px-6">
-        <div className="max-w-[960px] mx-auto">
+        <div className="max-w-[1240px] mx-auto">
           <button
             type="button"
             data-lm-home=""
@@ -51,7 +51,7 @@ export const LegalSubpageView: React.FC<LegalSubpageViewProps> = ({
 
       {/* Main Document Body */}
       <main className="flex-1 bg-[#ffffff] py-12 sm:py-16 px-4 sm:px-6">
-        <div className="max-w-[960px] mx-auto space-y-4">
+        <div className="max-w-[1240px] mx-auto space-y-4">
           {doc.blocks
             .slice(doc.blocks[0]?.startsWith('Дата') ? 2 : 1)
             .map((line, index) => {
