@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { IS_PRERENDER } from '../content/store';
 
 /** Что плавно появляется при прокрутке главной (кроме первого экрана). */
 const REVEAL_SELECTORS = [
@@ -25,7 +26,7 @@ const EYEBROW_SELECTOR = 'main section:not(#top) img.h-\\[1px\\]';
  */
 export function useScrollReveal() {
   useEffect(() => {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (IS_PRERENDER || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const root = document.documentElement;
 
     const targets = new Set<HTMLElement>();

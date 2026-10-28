@@ -1,4 +1,4 @@
-import { withBase } from '../lib/base';
+import { C, img } from '../content/store';
 export type Place = 'online' | 'offline';
 
 export const PLACE_META: Record<Place, { label: string; color: string; text: string }> = {
@@ -82,104 +82,31 @@ export interface CalendarEvent {
   highlight?: boolean;
 }
 
-/** Фото спикеров, которых нет в списках экспертов и участников на сайте. */
-export const SPEAKER_PHOTOS: Record<string, string> = {
-  'Елена Золина': withBase('/images/avatars/elena-zolina.webp'),
-  'Анна Кринжановская': withBase('/images/avatars/anna-krinzhanovskaya.webp'),
-};
+/** Спикеры не из списков экспертов и участников: фото и описание задаются в админке. */
+export const GUEST_SPEAKERS: Record<string, { photo?: string; about?: string }> = Object.fromEntries(
+  C.calendar.guestSpeakers.map((g) => [g.name, { photo: img(g.photo), about: g.about || undefined }]),
+);
 
-export const CALENDAR_TITLE = 'Программа мероприятий на\u00A0ноябрь\u00A02026';
-export const CALENDAR_YEAR = 2026;
-export const CALENDAR_MONTH_INDEX = 10; // ноябрь (0 — январь)
+const MONTHS_NOM = ['январь', 'февраль', 'март', 'апрель', 'май', 'июнь', 'июль', 'август', 'сентябрь', 'октябрь', 'ноябрь', 'декабрь'];
 
-export const CALENDAR_EVENTS: CalendarEvent[] = [
-  {
-    id: 'n04',
-    day: 4,
-    time: '19:00',
-    title: 'Практикум «Оформление CV для\u00A0управленца»',
-    format: 'praktikum',
-    place: 'online',
-    speakers: ['Дарья Бурцева'],
-  },
-  {
-    id: 'n07',
-    day: 7,
-    time: '11:00',
-    title: 'Открытый эфир «Страхи и\u00A0ложные убеждения: врача, руководителя, собственника»',
-    format: 'efir',
-    place: 'online',
-    speakers: ['Людмила Морозова', 'Елена Зыкина', 'Анна Кринжановская'],
-  },
-  {
-    id: 'n11',
-    day: 11,
-    time: '12:00',
-    title: 'Эмоциональный интеллект в\u00A0медицине: практические инструменты для\u00A0врачей, управленцев и\u00A0собственников',
-    format: 'efir',
-    place: 'online',
-    speakers: ['Ольга Быстрова'],
-  },
-  {
-    id: 'n12',
-    day: 12,
-    time: '12:00',
-    title: 'Маркетинг привёл пациента. А\u00A0что\u00A0дальше?',
-    format: 'efir',
-    place: 'online',
-    speakers: ['Елена Золина'],
-    description:
-      'Как\u00A0система 7-СЕРВИС, путь пациента и\u00A0диагностика клиентского опыта помогают клинике сохранять рекламные инвестиции, укреплять доверие и\u00A0увеличивать возвращаемость.',
-  },
-  {
-    id: 'n13',
-    day: 13,
-    title: 'Конференция «Люди\u00A0Медицины»',
-    format: 'conference',
-    place: 'offline',
-    highlight: true,
-    link: { label: 'Программа конференции', href: 'http://людимедицины-конференция.рф' },
-  },
-  {
-    id: 'n18',
-    day: 18,
-    time: '16:30',
-    title: 'Бранч «Среда возможностей»',
-    format: 'brunch',
-    place: 'offline',
-  },
-  {
-    id: 'n19',
-    day: 19,
-    time: '18:00',
-    title: 'Практикум «Технологические карты»',
-    format: 'praktikum',
-    place: 'online',
-    speakers: ['Елена Зыкина'],
-  },
-  {
-    id: 'n25',
-    day: 25,
-    time: '11:30 – 15:00',
-    title: 'Экскурсия в\u00A0клинику «Три\u00A0сестры»',
-    format: 'excursion',
-    place: 'offline',
-  },
-  {
-    id: 'n26',
-    day: 26,
-    time: '12:00',
-    title: 'Работа с\u00A0ДМС',
-    format: 'efir',
-    place: 'online',
-    speakers: ['Лариса Ткаченко'],
-  },
-  {
-    id: 'n28',
-    day: 28,
-    time: '11:00 – 14:00',
-    title: 'Мастермайнд «Маркетинг»',
-    format: 'mastermind',
-    place: 'online',
-  },
-];
+export const CALENDAR_YEAR = C.calendar.year;
+export const CALENDAR_MONTH_INDEX = Math.min(Math.max(C.calendar.month - 1, 0), 11); // 0 — январь
+export const CALENDAR_TITLE = `Программа мероприятий на\u00A0${MONTHS_NOM[CALENDAR_MONTH_INDEX]}\u00A0${CALENDAR_YEAR}`;
+
+const FORMATS = Object.keys(FORMAT_META) as EventFormat[];
+
+export const CALENDAR_EVENTS: CalendarEvent[] = C.calendar.events
+  .filter((e) => e.title && e.day >= 1 && e.day <= 31)
+  .map((e, i) => ({
+    id: `e${i}-${e.day}`,
+    day: e.day,
+    time: e.time || undefined,
+    title: e.title,
+    format: FORMATS.includes(e.format as EventFormat) ? (e.format as EventFormat) : 'efir',
+    place: e.place === 'offline' ? 'offline' : 'online',
+    speakers: e.speakers.filter(Boolean),
+    description: e.description || undefined,
+    theses: e.theses.filter(Boolean),
+    link: e.linkHref ? { label: e.linkLabel || 'Подробнее', href: e.linkHref } : undefined,
+    highlight: e.highlight || undefined,
+  }));

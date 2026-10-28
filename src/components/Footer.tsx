@@ -1,4 +1,5 @@
 import { BASE } from '../lib/base';
+import { C } from '../content/store';
 import React, { useEffect, useState } from 'react';
 import { ASSETS, NAV_LINKS } from '../data/siteContent';
 
@@ -36,8 +37,9 @@ export const Footer: React.FC<FooterProps> = ({ onNavigateAnchor, onOpenLegal })
             </a>
             <div className="flex flex-col sm:flex-row sm:items-end gap-6 sm:gap-12 lg:gap-[72px]">
               <div className="text-[#dec69a] text-[12px] sm:text-[10px] leading-[1.35]">
-                <div>ИП Морозова&nbsp;Л.В.</div>
-                <div>ИНН 110115274857</div>
+                {C.footer.legal.map((line) => (
+                  <div key={line}>{line}</div>
+                ))}
                 <div>© 2026</div>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 sm:gap-y-2 text-[#f9cd60] text-[14px] sm:text-[12px] leading-[1.33]">

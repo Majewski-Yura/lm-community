@@ -4,11 +4,13 @@ import { EVENT_PAGES } from './eventPages';
 import { LEGAL_DOCS } from './legalPagesData';
 import { FOUNDERS } from './siteContent';
 import { CONFERENCE_2025_SLUG } from './subpages';
+import { C } from '../content/store';
+import { BLOG_POSTS, BLOG_SLUG } from './blog';
 
-/** Адрес сайта (людимедицины.рф в punycode) — для canonical, og:url и sitemap.xml. */
-export const SITE_URL = 'https://xn--d1aaclcapkn2grc0a.xn--p1ai';
+/** Адрес сайта для canonical, og:url и sitemap.xml (задаётся в админке, без слеша на конце). */
+export const SITE_URL = C.seo.siteUrl.replace(/\/+$/, '');
 export const SITE_NAME = 'Люди Медицины';
-export const OG_IMAGE = `${SITE_URL}/images/og-preview.jpg`;
+export const OG_IMAGE = /^https?:/.test(C.seo.ogImage) ? C.seo.ogImage : `${SITE_URL}${C.seo.ogImage}`;
 
 export interface PageMeta {
   path: string;
@@ -24,9 +26,8 @@ export interface PageMeta {
 
 export const HOME_META: PageMeta = {
   path: '/',
-  title: 'Закрытое медицинское сообщество для врачей и руководителей клиник | Люди Медицины',
-  description:
-    'Профессиональное сообщество для врачей, управленцев и собственников клиник. Нетворкинг, обмен опытом, мастермайнды и поддержка лидеров частной медицины в России. Доступ к экспертам, стратегическим разборам и базе знаний.',
+  title: C.seo.title.replace(/\u00A0/g, ' '),
+  description: C.seo.description.replace(/\u00A0/g, ' '),
   priority: 1,
   slug: null,
 };
@@ -62,6 +63,20 @@ export const PAGES: PageMeta[] = [
     description: `${ev.kind} сообщества «Люди Медицины»: ${ev.when}, ${ev.where}. ${ev.about}`,
     priority: 0.5,
     slug: ev.slug,
+  })),
+  {
+    path: `/${BLOG_SLUG}/`,
+    title: `${C.blog.title} — блог сообщества | Люди Медицины`.replace(/\u00A0/g, ' '),
+    description: C.blog.lead.replace(/\u00A0/g, ' '),
+    priority: 0.6,
+    slug: BLOG_SLUG,
+  },
+  ...BLOG_POSTS.map((p) => ({
+    path: `/${p.pageSlug}`,
+    title: `${p.title} | Люди Медицины`.replace(/\u00A0/g, ' '),
+    description: (p.excerpt || p.title).replace(/\u00A0/g, ' '),
+    priority: 0.6,
+    slug: p.pageSlug,
   })),
   {
     path: `/${CONFERENCE_2025_SLUG}`,
@@ -112,19 +127,28 @@ function eventSchema(ev: CalendarEvent) {
   };
 }
 
-/** Разметка Schema.org для главной: организация, сайт и события календаря. */
+/** Разметка Schema.org для главной: организация, сайт, основатели, тариф и события календаря. */
 export function homeStructuredData() {
+  const org = `${SITE_URL}/#organization`;
+  const abs = (path: string) => (/^https?:/.test(path) ? path : `${SITE_URL}${path.startsWith('/') ? '' : '/'}${path}`);
   return {
     '@context': 'https://schema.org',
     '@graph': [
       {
         '@type': 'Organization',
-        '@id': `${SITE_URL}/#organization`,
+        '@id': org,
         name: SITE_NAME,
         url: SITE_URL,
         logo: `${SITE_URL}/images/Logo.svg`,
         description: HOME_META.description,
-        founder: FOUNDERS.map((f) => ({ '@type': 'Person', name: f.name })),
+        founder: FOUNDERS.map((f) => ({
+          '@type': 'Person',
+          name: f.name.replace(/\u00A0/g, ' '),
+          jobTitle: f.role.replace(/\u00A0/g, ' '),
+          image: abs(C.founders.items.find((x) => x.name === f.name)?.photo ?? ''),
+          ...(f.social.href && !/^https?:\/\/(vk\.com|t\.me)\/?$/.test(f.social.href) ? { sameAs: [f.social.href] } : {}),
+        })),
+        sameAs: [C.links.join],
       },
       {
         '@type': 'WebSite',
@@ -132,8 +156,25 @@ export function homeStructuredData() {
         url: SITE_URL,
         name: SITE_NAME,
         inLanguage: 'ru-RU',
-        publisher: { '@id': `${SITE_URL}/#organization` },
+        publisher: { '@id': org },
       },
+      ...(C.tariff.price
+        ? [
+            {
+              '@type': 'Service',
+              name: `${C.tariff.badge} сообщества «${SITE_NAME}»`.replace(/\u00A0/g, ' '),
+              description: C.tariff.description.replace(/\u00A0/g, ' '),
+              provider: { '@id': org },
+              offers: {
+                '@type': 'Offer',
+                price: C.tariff.price.replace(/\D/g, ''),
+                priceCurrency: 'RUB',
+                url: `${SITE_URL}/#tarifi`,
+                description: C.tariff.promoNote.replace(/\u00A0/g, ' '),
+              },
+            },
+          ]
+        : []),
       ...CALENDAR_EVENTS.map(eventSchema),
     ],
   };

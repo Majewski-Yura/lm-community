@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { C } from '../content/store';
 import { ChevronDown, HeartPulse, MessagesSquare, PiggyBank, Quote, Scale, UsersRound, type LucideIcon } from 'lucide-react';
 import { ASSETS, CAN_DO, EXPERTS, PARTICIPANTS, TESTIMONIALS } from '../data/siteContent';
 import { Avatar, Eyebrow, MobileSwiper } from './ui';
@@ -36,15 +37,15 @@ export const PeopleSections: React.FC = () => {
     <section id="uchastniki" className="bg-[#eee6d7] py-12 sm:py-[72px] lg:py-[100px] scroll-mt-20">
       <div className="max-w-[1280px] mx-auto px-4 sm:px-5">
         <div className="max-w-[1240px] mx-auto">
-          <Eyebrow line={ASSETS.lineGoldAmber} label="Участники" color="#d28802" />
+          <Eyebrow line={ASSETS.lineGoldAmber} label={C.participants.eyebrow} color="#d28802" />
           <h2 className="mt-4 font-headline text-[#020201] text-[30px] sm:text-[36px] lg:text-[40px] font-medium leading-[1.1]">
-            Среди Людей&nbsp;Медицины
+            {C.participants.title}
           </h2>
           <p className="mt-2 text-[#d28802] text-[15px] sm:text-[17px] font-medium">
-            (и&nbsp;это&nbsp;— лишь часть наших прекрасных участников!)
+            {C.participants.note}
           </p>
           <p className="mt-4 max-w-[576px] text-[#3c3836] text-[14px] leading-[1.63]">
-            Люди, которые каждый день принимают решения в&nbsp;медицине, управлении и&nbsp;развитии&nbsp;клиник
+            {C.participants.lead}
           </p>
 
           <div className="mt-7 sm:mt-10 lg:mt-[56px] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-5">
@@ -73,9 +74,9 @@ export const PeopleSections: React.FC = () => {
     <section id="otzyvy" className="bg-[#3c3836] py-12 sm:py-[72px] lg:py-[100px] scroll-mt-20">
       <div className="max-w-[1280px] mx-auto px-4 sm:px-5">
         <div className="max-w-[1240px] mx-auto">
-          <Eyebrow line={ASSETS.lineSand} label="Отзывы" color="#dec69a" />
+          <Eyebrow line={ASSETS.lineSand} label={C.testimonials.eyebrow} color="#dec69a" />
           <h2 className="mt-4 font-headline text-white text-[30px] sm:text-[36px] lg:text-[40px] font-medium leading-[1.1]">
-            Обратная связь
+            {C.testimonials.title}
           </h2>
 
           <MobileSwiper tone="dark" className="mt-7 sm:mt-10 lg:mt-[56px] sm:grid sm:grid-cols-1 md:grid-cols-2 sm:gap-6">
@@ -105,9 +106,9 @@ export const PeopleSections: React.FC = () => {
     <section id="zachem" className="bg-[#020201] py-12 sm:py-[72px] lg:py-[100px] scroll-mt-20">
       <div className="max-w-[1280px] mx-auto px-4 sm:px-5">
         <div className="max-w-[1240px] mx-auto">
-          <Eyebrow line={ASSETS.lineSand} label="Зачем сообщество" color="#dec69a" />
+          <Eyebrow line={ASSETS.lineSand} label={C.canDo.eyebrow} color="#dec69a" />
           <h2 className="mt-4 font-headline text-white text-[30px] sm:text-[36px] lg:text-[40px] font-medium leading-[1.1]">
-            Что&nbsp;можно сделать в&nbsp;сообществе
+            {C.canDo.title}
           </h2>
 
           <MobileSwiper tone="dark" className="mt-7 sm:mt-10 lg:mt-[56px] sm:grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 sm:gap-6">
@@ -140,9 +141,9 @@ export const PeopleSections: React.FC = () => {
     <section id="eksperty" className="bg-white py-12 sm:py-[72px] lg:py-[100px] scroll-mt-20">
       <div className="max-w-[1280px] mx-auto px-4 sm:px-5">
         <div className="max-w-[1240px] mx-auto">
-          <Eyebrow line={ASSETS.lineGoldAmber} label="Эксперты" color="#d28802" />
+          <Eyebrow line={ASSETS.lineGoldAmber} label={C.experts.eyebrow} color="#d28802" />
           <h2 className="mt-4 font-headline text-[#020201] text-[30px] sm:text-[36px] lg:text-[40px] font-medium leading-[1.1]">
-            Эксперты сообщества
+            {C.experts.title}
           </h2>
 
           <MobileSwiper className="mt-7 sm:mt-10 lg:mt-[56px] sm:grid sm:grid-cols-2 lg:grid-cols-4 sm:gap-5">
@@ -159,9 +160,9 @@ export const PeopleSections: React.FC = () => {
           </MobileSwiper>
 
           <div className="mt-8 rounded-[16px] bg-[#f9cd60] p-7 sm:p-8 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <span className="font-headline text-[#020201] text-[22px] sm:text-[26px] font-semibold">И&nbsp;многие&nbsp;другие!</span>
+            <span className="font-headline text-[#020201] text-[22px] sm:text-[26px] font-semibold">{C.experts.moreTitle}</span>
             <span className="text-[#020201] text-[15px] max-w-[460px]">
-              Мы&nbsp;с&nbsp;радостью развиваем проявленность наших резидентов!
+              {C.experts.moreText}
             </span>
           </div>
         </div>

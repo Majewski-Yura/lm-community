@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { C } from '../content/store';
 import { CalendarDays, ChevronDown, Clock, Mic, X } from 'lucide-react';
 import {
   CALENDAR_EVENTS,
@@ -7,7 +8,7 @@ import {
   CALENDAR_YEAR,
   FORMAT_META,
   PLACE_META,
-  SPEAKER_PHOTOS,
+  GUEST_SPEAKERS,
   type CalendarEvent,
 } from '../data/calendarData';
 import { ASSETS, EXPERTS, PARTICIPANTS } from '../data/siteContent';
@@ -28,7 +29,7 @@ function formatDate(day: number): string {
 /** Должность спикера — из списков экспертов и участников на сайте. */
 function speakerInfo(name: string) {
   const person = EXPERTS.find((p) => p.name === name) ?? PARTICIPANTS.find((p) => p.name === name);
-  return { name, about: person?.position, photo: person?.photo ?? SPEAKER_PHOTOS[name] };
+  return { name, about: GUEST_SPEAKERS[name]?.about ?? person?.position, photo: person?.photo ?? GUEST_SPEAKERS[name]?.photo };
 }
 
 /** События без спикера в формате, где он обычно есть. */
@@ -110,7 +111,7 @@ export const CalendarSection: React.FC<CalendarSectionProps> = ({ onNavigateAnch
     <section id="kalendar" className="bg-[#3c3836] py-12 sm:py-[72px] lg:py-[100px] scroll-mt-20">
       <div className="max-w-[1280px] mx-auto px-4 sm:px-5">
         <div className="max-w-[1240px] mx-auto">
-          <Eyebrow line={ASSETS.lineSand} label="Календарь" color="#dec69a" />
+          <Eyebrow line={ASSETS.lineSand} label={C.calendar.eyebrow} color="#dec69a" />
           <h2 className="mt-4 font-headline text-white text-[28px] sm:text-[36px] lg:text-[40px] font-medium leading-[1.1]">
             {CALENDAR_TITLE}
           </h2>
@@ -123,7 +124,7 @@ export const CalendarSection: React.FC<CalendarSectionProps> = ({ onNavigateAnch
                 {PLACE_META[place].label}
               </span>
             ))}
-            <span className="text-white/50 text-[13px]">Нажмите на&nbsp;событие, чтобы увидеть подробности</span>
+            <span className="text-white/50 text-[13px]">{C.calendar.hint}</span>
           </div>
 
           {/* Desktop grid: столбцы дней недели без событий — узкие */}
@@ -248,9 +249,9 @@ export const CalendarSection: React.FC<CalendarSectionProps> = ({ onNavigateAnch
 
           {/* Важно! */}
           <div className="mt-10 rounded-[16px] bg-[#f9cd60] p-6 sm:p-8 flex flex-col sm:flex-row gap-3 sm:gap-6 sm:items-center">
-            <span className="shrink-0 font-headline text-[#020201] text-[24px] sm:text-[28px] font-bold">Важно!</span>
+            <span className="shrink-0 font-headline text-[#020201] text-[24px] sm:text-[28px] font-bold">{C.calendar.importantTitle}</span>
             <p className="font-headline text-[#020201] text-[17px] sm:text-[20px] font-medium leading-[1.4]">
-              Мы&nbsp;измеряем пользу не&nbsp;количеством эфиров, а&nbsp;реальными изменениями в&nbsp;вашей работе и&nbsp;клинике
+              {C.calendar.importantText}
             </p>
           </div>
         </div>

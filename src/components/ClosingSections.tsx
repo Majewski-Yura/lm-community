@@ -1,4 +1,5 @@
 import React from 'react';
+import { C } from '../content/store';
 import { GraduationCap, HandHeart, HeartHandshake, ShieldCheck, Sprout, type LucideIcon } from 'lucide-react';
 import {
   ASSETS,
@@ -7,6 +8,7 @@ import {
   JOIN_URL,
 } from '../data/siteContent';
 import { Eyebrow, JoinButton, MobileSwiper } from './ui';
+import { BlogSection } from './BlogSections';
 
 /** Иконки ценностей по номеру: доверие, взаимность, профессионализм, бережность, развитие. */
 const VALUE_ICONS: Record<string, LucideIcon> = {
@@ -19,9 +21,10 @@ const VALUE_ICONS: Record<string, LucideIcon> = {
 
 interface ClosingSectionsProps {
   onNavigateAnchor: (href: string) => void;
+  onOpenLegal: (slug: string) => void;
 }
 
-export const ClosingSections: React.FC<ClosingSectionsProps> = ({ onNavigateAnchor }) => {
+export const ClosingSections: React.FC<ClosingSectionsProps> = ({ onNavigateAnchor, onOpenLegal }) => {
   const goTo = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
     onNavigateAnchor(href);
@@ -47,18 +50,18 @@ export const ClosingSections: React.FC<ClosingSectionsProps> = ({ onNavigateAnch
 
         <div className="relative z-10 max-w-[1280px] mx-auto px-4 sm:px-5">
           <div className="max-w-[860px] mx-auto rounded-[28px] lg:rounded-[40px] border border-[#dec69a]/40 bg-[#020201]/80 backdrop-blur-md px-6 py-12 sm:px-12 sm:py-16 text-center flex flex-col items-center shadow-[0_20px_50px_rgba(0,0,0,0.8)]">
-            <Eyebrow line={ASSETS.lineSand} label="Вступление" color="#dec69a" />
+            <Eyebrow line={ASSETS.lineSand} label={C.cta.eyebrow} color="#dec69a" />
 
             <h2 className="mt-6 font-headline text-white text-[26px] min-[400px]:text-[30px] sm:text-[40px] lg:text-[46px] font-medium leading-[1.15]">
-              Хотите стать Человеком Медицины?
+              {C.cta.title}
             </h2>
 
             <p className="mt-3 font-headline text-[#f9cd60] text-[24px] sm:text-[30px] font-semibold">
-              Присоединяйтесь!
+              {C.cta.accent}
             </p>
 
             <p className="mt-4 max-w-[560px] text-[#dec69a] text-[15px] sm:text-[16px] leading-[1.55]">
-              Доступ ко&nbsp;всей экосистеме сообщества: закрытому чату, регулярным эфирам, мастермайндам, экскурсиям и&nbsp;базе&nbsp;знаний.
+              {C.cta.text}
             </p>
 
             <JoinButton href={JOIN_URL} external variant="gold" className="mt-10" />
@@ -75,14 +78,14 @@ export const ClosingSections: React.FC<ClosingSectionsProps> = ({ onNavigateAnch
             <div className="flex items-center gap-3">
               <img src={ASSETS.lineValues} alt="" className="w-[24px] h-[1px] shrink-0" />
               <span className="text-[#b8924a] text-[12px] sm:text-[10px] font-bold tracking-[2.5px] sm:tracking-[3px] uppercase leading-[1.5]">
-                Ценности
+                {C.values.eyebrow}
               </span>
             </div>
             <h2 className="mt-4 font-headline text-[#020201] text-[30px] sm:text-[36px] lg:text-[40px] font-medium leading-[1.08]">
-              Ценности сообщества
+              {C.values.title}
             </h2>
             <p className="mt-4 max-w-[474px] text-[#020201] text-[14px] leading-[1.63]">
-              В&nbsp;основе сообщества «Люди Медицины» лежат пять ценностей. Они проявляются не&nbsp;в&nbsp;декларациях, а&nbsp;в&nbsp;ежедневном общении.
+              {C.values.lead}
             </p>
             <MobileSwiper className="mt-7 sm:mt-10 lg:mt-[64px] sm:grid sm:grid-cols-2 lg:grid-cols-5 sm:gap-[24px]">
               {COMMUNITY_VALUES.map((val) => {
@@ -121,14 +124,14 @@ export const ClosingSections: React.FC<ClosingSectionsProps> = ({ onNavigateAnch
             <div className="flex items-center gap-3">
               <img src={ASSETS.lineGoldAmber} alt="" className="w-[24px] h-[1px] shrink-0" />
               <span className="text-[#d28802] text-[12px] sm:text-[10px] font-bold tracking-[2.5px] sm:tracking-[3px] uppercase leading-[1.5]">
-                Экосистема
+                {C.ecosystem.eyebrow}
               </span>
             </div>
             <h2 className="mt-4 font-headline text-[#020201] text-[30px] sm:text-[36px] lg:text-[40px] font-medium leading-[1.08]">
-              Общая экосистема «Люди&nbsp;Медицины»
+              {C.ecosystem.title}
             </h2>
             <p className="mt-4 max-w-[576px] text-[#020201] text-[14px] leading-[1.63]">
-              Группа компаний «Люди Медицины»&nbsp;— это&nbsp;целая система для&nbsp;развития медицинского бизнеса.
+              {C.ecosystem.lead}
             </p>
             <MobileSwiper className="mt-7 sm:mt-10 lg:mt-[64px] sm:grid sm:grid-cols-1 lg:grid-cols-2 sm:gap-[24px]">
               {GROUP_ECOSYSTEM.map((item) => (
@@ -166,16 +169,18 @@ export const ClosingSections: React.FC<ClosingSectionsProps> = ({ onNavigateAnch
         </div>
       </section>
 
+      <BlogSection onOpenLegal={onOpenLegal} />
+
       {/* =====================================================================
           15. ВЫ НЕ ОДНИ!
       ====================================================================== */}
       <section className="bg-[#f9cd60] py-14 sm:py-[80px] lg:py-[110px]">
         <div className="max-w-[860px] mx-auto px-6 flex flex-col items-center text-center">
           <h2 className="font-headline text-[#020201] text-[36px] sm:text-[44px] lg:text-[52px] font-semibold leading-[1.1]">
-            Вы&nbsp;не&nbsp;одни!
+            {C.final.title}
           </h2>
           <p className="mt-6 text-[#020201] text-[16px] sm:text-[18px] leading-[1.6]">
-            В&nbsp;«Люди Медицины» можно прийти не&nbsp;только с&nbsp;готовыми ответами и&nbsp;успехами, но&nbsp;и&nbsp;с&nbsp;вопросами, сомнениями и&nbsp;самыми сложными ситуациями. Здесь можно не&nbsp;знать, как&nbsp;поступить, и&nbsp;смело просить помощи у&nbsp;тех, кто&nbsp;точно поймет и&nbsp;всегда поддержит!
+            {C.final.text}
           </p>
           <JoinButton href={JOIN_URL} external variant="white" className="mt-10" />
         </div>

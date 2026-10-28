@@ -4,6 +4,7 @@ import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
 import { defineConfig, type Connect, type Plugin } from "vite";
 import { handleForm } from "./server/form-handler.mjs";
+import { adminDevApi } from "./server/admin-dev.mjs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -38,7 +39,13 @@ function formsApi(): Plugin {
 export default defineConfig({
   // На GitHub Pages сайт лежит в подпапке репозитория: BASE_PATH=/lm-community/
   base: process.env.BASE_PATH || '/',
-  plugins: [react(), tailwindcss(), formsApi()],
+  plugins: [react(), tailwindcss(), formsApi(), adminDevApi({ root: __dirname })],
+  build: {
+    rollupOptions: {
+      // Сайт и админка (/admin) — две страницы одной сборки
+      input: { main: path.resolve(__dirname, 'index.html'), admin: path.resolve(__dirname, 'admin/index.html') },
+    },
+  },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "src"),

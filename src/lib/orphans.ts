@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { IS_PRERENDER } from '../content/store';
 
 const NBSP = ' ';
 const TEXT_SELECTOR = 'h1,h2,h3,h4,p,li,blockquote,figcaption,span,a,button,div';
@@ -51,6 +52,8 @@ function fixOrphans(root: ParentNode) {
 /** Следит за висячими последними словами на странице: после отрисовки, загрузки шрифтов и смены ширины экрана. */
 export function useOrphanFix(deps: unknown[] = []) {
   useEffect(() => {
+    // В снимке для публикации не склеиваем: ширина экрана у посетителя будет другой
+    if (IS_PRERENDER) return;
     let timer = 0;
     let lastWidth = window.innerWidth;
     const run = () => fixOrphans(document);

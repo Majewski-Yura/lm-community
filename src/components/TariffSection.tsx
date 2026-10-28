@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { C } from '../content/store';
 import { Check, ChevronDown } from 'lucide-react';
 import { ASSETS, JOIN_URL, SINGLE_TARIFF } from '../data/siteContent';
 import { Eyebrow, JoinButton } from './ui';
@@ -15,9 +16,9 @@ export const TariffSection: React.FC = () => {
     <section id="tarifi" className="bg-[#020201] py-12 sm:py-[72px] lg:py-[100px] scroll-mt-20">
       <div className="max-w-[1280px] mx-auto px-4 sm:px-5">
         <div className="max-w-[1240px] mx-auto">
-          <Eyebrow line={ASSETS.lineSand} label="Тариф" color="#dec69a" />
+          <Eyebrow line={ASSETS.lineSand} label={C.tariff.eyebrow} color="#dec69a" />
           <h2 className="mt-4 font-headline text-white text-[30px] sm:text-[36px] lg:text-[40px] font-medium leading-[1.1]">
-            Стоимость участия
+            {C.tariff.title}
           </h2>
 
           <div className="mt-7 sm:mt-10 lg:mt-[56px] rounded-[20px] lg:rounded-[28px] border border-[#dec69a]/40 bg-gradient-to-br from-[#1b1814] to-[#020201] grid grid-cols-1 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
@@ -42,7 +43,7 @@ export const TariffSection: React.FC = () => {
 
             <div className="p-6 pt-0 sm:p-10 sm:pt-0 lg:p-12">
               <div className="lg:hidden h-px bg-[#dec69a]/20 mb-6" />
-              <div className="text-[#dec69a] text-[12px] font-medium tracking-[2px] uppercase">Что&nbsp;входит</div>
+              <div className="text-[#dec69a] text-[12px] font-medium tracking-[2px] uppercase">{C.tariff.featuresTitle}</div>
               <ul className="mt-5 grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-3.5">
                 {t.features.map((f, i) => (
                   <li

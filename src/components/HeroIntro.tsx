@@ -1,4 +1,5 @@
 import React, { useRef, useState } from 'react';
+import { C } from '../content/store';
 import { BriefcaseMedical, Building2, Play, Stethoscope, Users, type LucideIcon } from 'lucide-react';
 import { ASSETS, INTRO_VIDEO_EMBED_URL, WHO_ROLES } from '../data/siteContent';
 import { Eyebrow, JoinButton } from './ui';
@@ -50,7 +51,7 @@ export const HeroIntro: React.FC<HeroIntroProps> = ({ onNavigateAnchor }) => {
         <div data-lm-parallax className="absolute inset-x-0 top-0 h-[60%] sm:h-full overflow-hidden will-change-transform">
           <img
             src={ASSETS.heroCrowdPhoto}
-            alt="Конференция «Люди Медицины»&nbsp;— зал и&nbsp;участники"
+            alt={C.hero.photoAlt}
             fetchPriority="high"
             className="lm-hero-zoom absolute inset-0 w-full h-full object-cover object-[38%_center] sm:object-center filter brightness-[1.12] saturate-[1.08]"
           />
@@ -71,7 +72,7 @@ export const HeroIntro: React.FC<HeroIntroProps> = ({ onNavigateAnchor }) => {
 
         <div className="relative z-10 w-full max-w-[1280px] mx-auto px-4 sm:px-5 pb-14 sm:pb-20 lg:pb-[88px]">
           <div className="max-w-[1240px] mx-auto">
-            <h1 className="sr-only">Люди Медицины&nbsp;— профессиональное сообщество руководителей и&nbsp;лидеров частных&nbsp;клиник</h1>
+            <h1 className="sr-only">{C.hero.h1}</h1>
             <img
               src={ASSETS.heroWordmark}
               alt="Люди Медицины"
@@ -79,11 +80,11 @@ export const HeroIntro: React.FC<HeroIntroProps> = ({ onNavigateAnchor }) => {
             />
 
             <p style={{ animationDelay: '420ms' }} className="lm-hero-in mt-6 sm:mt-8 max-w-[760px] font-headline text-white text-[22px] sm:text-[28px] lg:text-[34px] font-medium leading-[1.25]">
-              Профессиональное сообщество для&nbsp;руководителей и&nbsp;лидеров частных&nbsp;клиник
+              {C.hero.subtitle}
             </p>
 
             <p style={{ animationDelay: '560ms' }} className="lm-hero-in mt-4 max-w-[580px] text-[#dec69a] text-[15px] sm:text-[17px] leading-[1.55]">
-              Совместно закрываем задачи, которые невозможно решить внутри своей клиники или&nbsp;на&nbsp;публичных площадках
+              {C.hero.lead}
             </p>
 
             <div style={{ animationDelay: '700ms' }} className="lm-hero-in mt-8 sm:mt-10 flex flex-wrap items-center gap-4">
@@ -103,9 +104,9 @@ export const HeroIntro: React.FC<HeroIntroProps> = ({ onNavigateAnchor }) => {
         <div className="max-w-[1280px] mx-auto px-4 sm:px-5">
           <div className="max-w-[1120px] mx-auto">
             <div className="mb-8">
-              <Eyebrow line={ASSETS.lineSand} label="Видеообращение" color="#dec69a" />
+              <Eyebrow line={ASSETS.lineSand} label={C.video.eyebrow} color="#dec69a" />
               <h2 className="mt-3 font-headline text-white text-[26px] sm:text-[34px] lg:text-[38px] font-medium leading-[1.2]">
-                Узнайте за&nbsp;3&nbsp;минуты, что&nbsp;такое «Люди&nbsp;Медицины»
+                {C.video.title}
               </h2>
             </div>
 
@@ -117,7 +118,7 @@ export const HeroIntro: React.FC<HeroIntroProps> = ({ onNavigateAnchor }) => {
                     src={`${INTRO_VIDEO_EMBED_URL}${
                       INTRO_VIDEO_EMBED_URL.includes('?') ? '&' : '?'
                     }autoplay=1`}
-                    title="Видео от&nbsp;Людмилы Морозовой&nbsp;— Люди&nbsp;Медицины"
+                    title={C.video.title}
                     allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
                     allowFullScreen
                     className="absolute inset-0 w-full h-full border-0"
@@ -141,12 +142,12 @@ export const HeroIntro: React.FC<HeroIntroProps> = ({ onNavigateAnchor }) => {
                   {/* Цитата, подпись и одна кнопка — без служебных плашек */}
                   <div className="relative z-10 max-w-[540px] -mt-10 sm:mt-auto sm:mb-auto">
                     <p className="font-headline text-white text-[24px] sm:text-[30px] lg:text-[34px] font-medium leading-[1.25]">
-                      «Мы&nbsp;создали место силы для&nbsp;тех, кто&nbsp;строит будущее медицины»
+                      {C.video.quote}
                     </p>
                     <div className="mt-5 flex items-center gap-3">
                       <span aria-hidden="true" className="w-8 h-px bg-[#dec69a]/60" />
                       <span className="text-[#dec69a] text-[14px] sm:text-[15px] leading-[1.4]">
-                        Людмила Морозова, основатель сообщества
+                        {C.video.author}
                       </span>
                     </div>
 
@@ -160,7 +161,7 @@ export const HeroIntro: React.FC<HeroIntroProps> = ({ onNavigateAnchor }) => {
                         <Play className="w-3.5 h-3.5 ml-0.5 fill-current" />
                       </span>
                       <span>Смотреть видео</span>
-                      <span className="font-medium normal-case tracking-normal text-[#020201]/60">3&nbsp;мин</span>
+                      {C.video.duration && <span className="font-medium normal-case tracking-normal text-[#020201]/60">{C.video.duration}</span>}
                     </button>
                   </div>
                 </div>
@@ -176,24 +177,24 @@ export const HeroIntro: React.FC<HeroIntroProps> = ({ onNavigateAnchor }) => {
       <section id="dlyakogo" className="bg-[#020201] pb-12 sm:pb-[72px] lg:pb-[100px] scroll-mt-20">
         <div className="max-w-[1280px] mx-auto px-4 sm:px-5">
           <div className="max-w-[1240px] mx-auto">
-            <Eyebrow line={ASSETS.lineSand} label="Для&nbsp;кого" color="#dec69a" />
+            <Eyebrow line={ASSETS.lineSand} label={C.who.eyebrow} color="#dec69a" />
             <h2 className="mt-4 font-headline text-white text-[30px] sm:text-[36px] lg:text-[40px] font-medium leading-[1.08]">
-              Кто&nbsp;такие Люди&nbsp;Медицины?
+              {C.who.title}
             </h2>
             <p className="mt-4 max-w-[576px] text-[#dec69a] text-[14px] sm:text-[15px] leading-[1.63]">
-              Это&nbsp;те, кто&nbsp;не&nbsp;стоит на&nbsp;месте. Те, кто&nbsp;строит карьеру, управляет командами или&nbsp;создает собственные клиники.
+              {C.who.lead}
             </p>
 
             <div className="mt-7 sm:mt-10 lg:mt-[56px] grid grid-cols-1 lg:grid-cols-12 gap-6">
               {/* 4 Roles Badges */}
               <div className="lg:col-span-5 grid grid-cols-2 gap-4">
                 {WHO_ROLES.map((role, i) => {
-                  const Icon = ROLE_ICONS[i];
+                  const Icon = ROLE_ICONS[i % ROLE_ICONS.length];
                   return (
                   <div
-                    key={role}
+                    key={role + i}
                     className="rounded-[16px] p-4 min-[400px]:p-5 sm:p-6 min-h-[120px] flex flex-col justify-between transition-transform duration-200 hover:-translate-y-0.5"
-                    style={{ backgroundColor: ['#eee6d7', '#dec69a', '#dec69a', '#f9cd60'][i] }}
+                    style={{ backgroundColor: ['#eee6d7', '#dec69a', '#dec69a', '#f9cd60'][i % 4] }}
                   >
                     <span className="w-11 h-11 rounded-[12px] bg-[#020201]/[0.07] flex items-center justify-center">
                       <Icon className="w-[22px] h-[22px] text-[#020201]/80" strokeWidth={1.75} aria-hidden="true" />
@@ -209,13 +210,13 @@ export const HeroIntro: React.FC<HeroIntroProps> = ({ onNavigateAnchor }) => {
               {/* Stress & Solution White Card */}
               <div className="lg:col-span-7 rounded-[16px] bg-white p-7 sm:p-10 flex flex-col justify-center">
                 <p className="font-headline text-[#020201] text-[22px] sm:text-[26px] font-medium leading-[1.3]">
-                  Управлять отделением или&nbsp;клиникой&nbsp;— это&nbsp;круглосуточный стресс.
+                  {C.who.cardTitle}
                 </p>
                 <p className="mt-5 text-[#3c3836] text-[15px] leading-[1.63]">
-                  Вы&nbsp;не&nbsp;можете обсудить кадровый кризис с&nbsp;подчиненными, а&nbsp;юридические риски или&nbsp;реальные цифры выручки&nbsp;— с&nbsp;конкурентами на&nbsp;публичной конференции.
+                  {C.who.cardText}
                 </p>
                 <p className="mt-4 text-[#020201] text-[15px] font-medium leading-[1.63] border-l-2 border-[#d28802] pl-4">
-                  Мы&nbsp;создали безопасное, экологичное пространство без&nbsp;сарказма и&nbsp;негатива, где&nbsp;коллеги помогают друг другу расти и&nbsp;спасать бизнес от&nbsp;ошибок.
+                  {C.who.cardAccent}
                 </p>
               </div>
             </div>

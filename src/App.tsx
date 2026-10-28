@@ -12,14 +12,26 @@ import { LEGAL_DOCS } from './data/legalPagesData';
 import { pageMetaFor } from './data/seo';
 import { CONFERENCE_2025_SLUG, isSubpage } from './data/subpages';
 import { useOrphanFix } from './lib/orphans';
+import { BLOG_SLUG, findBlogPost } from './data/blog';
+import { BlogListPage, BlogPostPage } from './components/BlogSections';
 import { BASE } from './lib/base';
+import { IS_PRERENDER } from './content/store';
+import { ASSETS } from './data/siteContent';
 
 function resolveInitialPageSlug(): string | null {
   if (typeof window === 'undefined') return null;
+  if (IS_PRERENDER) return window.__LM_PAGE__ ?? null;
   const segments = window.location.pathname
     .split('/')
     .filter((part) => part && part !== 'index.html');
   const last = segments[segments.length - 1]?.replace(/\.html$/, '');
+  // Блог: /blog/ — все записи, /blog/<slug> — запись
+  const blogIndex = segments.lastIndexOf(BLOG_SLUG);
+  if (blogIndex !== -1) {
+    const post = segments[blogIndex + 1]?.replace(/\.html$/, '');
+    const slug = post && post !== 'index' ? `${BLOG_SLUG}/${post}` : BLOG_SLUG;
+    if (isSubpage(slug)) return slug;
+  }
   if (isSubpage(last)) return last;
   const cleanHash = window.location.hash.replace(/^#\/?/, '');
   if (isSubpage(cleanHash)) return cleanHash;
@@ -43,6 +55,33 @@ export function App({ initialPageSlug }: AppProps) {
   }, [pageSlug]);
 
   useOrphanFix([pageSlug]);
+
+  // Снимок для публикации из админки: готовый HTML страницы, теги <head> и файлы для поисковиков
+  useEffect(() => {
+    if (!IS_PRERENDER) return;
+    let cancelled = false;
+    (async () => {
+      await document.fonts?.ready;
+      await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+      const seo = await import('./lib/seoFiles');
+      if (cancelled) return;
+      const page = pageMetaFor(pageSlug);
+      window.__LM_SNAPSHOT__ = {
+        slug: pageSlug,
+        head: seo.headTags(page),
+        html: document.getElementById('root')?.innerHTML ?? '',
+        heroPreload: ASSETS.heroCrowdPhoto,
+        pages: pageSlug === null ? seo.PAGES.map((p) => ({ slug: p.slug, file: seo.pageFile(p) })) : undefined,
+        files:
+          pageSlug === null
+            ? { 'sitemap.xml': seo.sitemapXml(), 'robots.txt': seo.robotsTxt(), 'llms.txt': seo.llmsTxt(), 'llms-full.txt': seo.llmsFullTxt() }
+            : undefined,
+      };
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [pageSlug]);
 
   useEffect(() => {
     const onPopState = () => setPageSlug(resolveInitialPageSlug());
@@ -101,7 +140,7 @@ export function App({ initialPageSlug }: AppProps) {
   const handleOpenLegal = useCallback((slug: string) => {
     setPageSlug(slug);
     try {
-      window.history.pushState(null, '', `${BASE}${slug}`);
+      window.history.pushState(null, '', `${BASE}${slug === BLOG_SLUG ? 'blog/' : slug}`);
     } catch {
       // file:// может запрещать работу с историей
     }
@@ -133,7 +172,7 @@ export function App({ initialPageSlug }: AppProps) {
         <HomePage onNavigateAnchor={handleNavigateAnchor} onOpenLegal={handleOpenLegal} />
       )}
 
-      <CookieBanner onOpenLegal={handleOpenLegal} />
+      {!IS_PRERENDER && <CookieBanner onOpenLegal={handleOpenLegal} />}
     </div>
   );
 }
@@ -151,6 +190,9 @@ function Subpage({ slug, ...nav }: SubpageProps) {
   if (slug === 'diagnostic') return <DiagnosticPage {...nav} />;
   if (slug === 'anketa') return <AnketaPage {...nav} />;
   if (slug === CONFERENCE_2025_SLUG) return <Conference2025Page {...nav} />;
+  if (slug === BLOG_SLUG) return <BlogListPage {...nav} />;
+  const post = findBlogPost(slug);
+  if (post) return <BlogPostPage post={post} {...nav} />;
   return null;
 }
 

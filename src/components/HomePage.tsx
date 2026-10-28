@@ -23,7 +23,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigateAnchor, onOpenLega
       <PeopleSections />
       <CalendarSection onNavigateAnchor={onNavigateAnchor} />
       <CommunitySections />
-      <ClosingSections onNavigateAnchor={onNavigateAnchor} />
+      <ClosingSections onNavigateAnchor={onNavigateAnchor} onOpenLegal={onOpenLegal} />
     </main>
     <Footer onNavigateAnchor={onNavigateAnchor} onOpenLegal={onOpenLegal} />
   </>

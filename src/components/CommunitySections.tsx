@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { C } from '../content/store';
 import { ChevronDown, ChevronLeft, ChevronRight, Send, X } from 'lucide-react';
 import {
   ASSETS,
@@ -149,9 +150,9 @@ export const CommunitySections: React.FC = () => {
         />
         <div className="relative z-10 max-w-[1280px] mx-auto px-4 sm:px-5">
           <div className="max-w-[1240px] mx-auto">
-            <Eyebrow line={ASSETS.lineSand} label="Как&nbsp;это&nbsp;работает" color="#dec69a" />
+            <Eyebrow line={ASSETS.lineSand} label={C.communityHas.eyebrow} color="#dec69a" />
             <h2 className="mt-4 font-headline text-white text-[30px] sm:text-[36px] lg:text-[40px] font-medium leading-[1.1]">
-              Что&nbsp;есть в&nbsp;сообществе?
+              {C.communityHas.title}
             </h2>
             <FeatureGrid items={COMMUNITY_HAS} dark />
           </div>
@@ -162,9 +163,9 @@ export const CommunitySections: React.FC = () => {
       <section className="bg-[#eee6d7] py-12 sm:py-[72px] lg:py-[100px]">
         <div className="max-w-[1280px] mx-auto px-4 sm:px-5">
           <div className="max-w-[1240px] mx-auto">
-            <Eyebrow line={ASSETS.lineGoldAmber} label="А&nbsp;также" color="#d28802" />
+            <Eyebrow line={ASSETS.lineGoldAmber} label={C.communityExtra.eyebrow} color="#d28802" />
             <h2 className="mt-4 font-headline text-[#020201] text-[30px] sm:text-[36px] lg:text-[40px] font-medium leading-[1.1]">
-              Что&nbsp;еще у&nbsp;нас&nbsp;есть?
+              {C.communityExtra.title}
             </h2>
             <FeatureGrid items={COMMUNITY_EXTRA} />
           </div>
@@ -232,9 +233,9 @@ export const CommunitySections: React.FC = () => {
       <section id="osnovateli" className="bg-[#3c3836] py-12 sm:py-[72px] lg:py-[100px] scroll-mt-20">
         <div className="max-w-[1280px] mx-auto px-4 sm:px-5">
           <div className="max-w-[1240px] mx-auto">
-            <Eyebrow line={ASSETS.lineFounders} label="Основатели" color="#c9a96e" />
+            <Eyebrow line={ASSETS.lineFounders} label={C.founders.eyebrow} color="#c9a96e" />
             <h2 className="mt-4 font-headline text-white text-[30px] sm:text-[36px] lg:text-[40px] font-medium leading-[1.1]">
-              Кто&nbsp;стоит за&nbsp;проектом?
+              {C.founders.title}
             </h2>
 
             {/* Телефон и планшет: переключатель между основателями */}

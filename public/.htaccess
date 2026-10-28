@@ -1,0 +1,56 @@
+# Сайт «Люди Медицины» на обычном хостинге (Apache): адреса без .html, защита служебных папок, кэш.
+Options -Indexes
+DirectoryIndex index.html
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # Служебные файлы и папки закрыты для посетителей
+  RewriteRule ^private(/|$) - [F,L]
+  RewriteRule ^api/_lib\.php$ - [F,L]
+
+  # Формы сайта шлют ответы на /api/form
+  RewriteRule ^api/form/?$ api/form.php [L]
+
+  # Админка
+  RewriteRule ^admin/?$ admin/index.html [L]
+
+  # Старые адреса Tilda (301 — постоянный переезд)
+  RewriteRule ^page93041346\.html$ /home [R=301,L]
+  RewriteRule ^priva/?$ /privacy-policy [R=301,L]
+  RewriteRule ^podval/?$ / [R=301,L]
+  RewriteRule ^page(74570317|203094009|161964109|161968009)\.html$ / [R=301,L]
+
+  # /oferta → oferta.html, /blog/zapis → blog/zapis.html
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{DOCUMENT_ROOT}/$1.html -f
+  RewriteRule ^(.+?)/?$ $1.html [L]
+
+  # Остальные несуществующие адреса — главная (сайт сам покажет нужный раздел)
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{REQUEST_URI} !^/(api|admin|uploads|assets|images|fonts)/
+  RewriteRule . /index.html [L]
+</IfModule>
+
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  <FilesMatch "\.(js|css|woff2|webp|png|jpg|jpeg|svg)$">
+    Header set Cache-Control "public, max-age=2592000"
+  </FilesMatch>
+  <FilesMatch "^assets/">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+  <FilesMatch "\.(html|xml|txt)$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+</IfModule>
+
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css text/plain text/xml application/javascript application/json image/svg+xml
+</IfModule>
+
+AddDefaultCharset utf-8
+AddType text/plain .txt

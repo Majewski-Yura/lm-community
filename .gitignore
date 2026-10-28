@@ -7,3 +7,6 @@ dist-ssr/
 .env
 .env.*
 
+
+# Локальная копия данных админки при разработке (server/admin-dev.mjs)
+.dev-admin/
