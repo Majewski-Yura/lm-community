@@ -47,19 +47,9 @@ const MOBILE_VISIBLE_EVENTS = highlightIndex >= 0 ? highlightIndex + 1 : 4;
 /** Плашка формата как в карточках программы: белая, бежевая обводка, цветная точка (онлайн — охра, офлайн — тёмная). */
 const PlaceTag: React.FC<{ place: CalendarEvent['place'] }> = ({ place }) => (
   <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-[#e3d6bf] bg-white px-2.5 py-0.5 text-[#020201] text-[12px] font-medium leading-[1.5]">
-    <span aria-hidden="true" className={`w-2 h-2 rounded-full ${place === 'online' ? 'bg-[#d4943a]' : 'bg-[#eee6d7] ring-1 ring-inset ring-[#020201]/30'}`} />
+    <span aria-hidden="true" className={`w-2 h-2 rounded-full ${place === 'online' ? 'bg-[#d4943a]' : 'bg-[#3c3836]'}`} />
     {PLACE_META[place].label}
   </span>
-);
-
-/** Кружок формата: онлайн — охра, офлайн — цвет фона секции (на тёмном — контур). */
-const PlaceDot: React.FC<{ place: CalendarEvent['place']; onDark?: boolean }> = ({ place, onDark }) => (
-  <span
-    aria-label={PLACE_META[place].label}
-    className={`inline-block w-5 h-5 lg:w-6 lg:h-6 rounded-full shrink-0 ${
-      place === 'online' ? 'bg-[#d4943a]' : onDark ? 'bg-[#eee6d7]' : 'bg-[#eee6d7] ring-1 ring-inset ring-[#020201]/25'
-    }`}
-  />
 );
 
 interface CalendarSectionProps {
@@ -120,12 +110,6 @@ export const CalendarSection: React.FC<CalendarSectionProps> = ({ onNavigateAnch
 
           {/* Legend */}
           <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2">
-            {(Object.keys(PLACE_META) as CalendarEvent['place'][]).map((place) => (
-              <span key={place} className="inline-flex items-center gap-2 text-white/80 text-[13px]">
-                <PlaceDot place={place} onDark />
-                {PLACE_META[place].label}
-              </span>
-            ))}
             <span className="text-white/50 text-[13px]">{C.calendar.hint}</span>
           </div>
 
@@ -154,11 +138,6 @@ export const CalendarSection: React.FC<CalendarSectionProps> = ({ onNavigateAnch
                 const dayRow = (
                   <div className="flex items-start justify-between gap-2">
                     <span className="text-[18px] lg:text-[20px] font-medium leading-none">{day}</span>
-                    <span className="flex gap-1">
-                      {[...new Set(events.map((ev) => ev.place))].map((place) => (
-                        <PlaceDot key={place} place={place} onDark={highlight} />
-                      ))}
-                    </span>
                   </div>
                 );
 
@@ -175,7 +154,10 @@ export const CalendarSection: React.FC<CalendarSectionProps> = ({ onNavigateAnch
                     >
                       {dayRow}
                       <span className="mt-3 text-[13px] lg:text-[14px] font-medium leading-[1.3] line-clamp-6 hyphens-auto lg:hyphens-manual break-words">{ev.title}</span>
-                      {ev.time && <span className="mt-auto pt-3 text-[13px] lg:text-[14px] leading-none">{ev.time}</span>}
+                      <span className="mt-auto pt-3 flex items-center justify-between gap-2">
+                        <span className="text-[13px] lg:text-[14px] leading-none">{ev.time}</span>
+                        <PlaceTag place={ev.place} />
+                      </span>
                     </button>
                   );
                 }
@@ -193,7 +175,10 @@ export const CalendarSection: React.FC<CalendarSectionProps> = ({ onNavigateAnch
                           className="text-left rounded-[8px] -mx-1.5 px-1.5 py-1 cursor-pointer transition-colors hover:bg-[#f9cd60]"
                         >
                           <span className="block text-[12px] lg:text-[13px] font-medium leading-[1.3] line-clamp-4 hyphens-auto lg:hyphens-manual break-words">{ev.title}</span>
-                          {ev.time && <span className="block mt-1 text-[12px] leading-none">{ev.time}</span>}
+                          <span className="mt-1 flex items-center justify-between gap-2">
+                            <span className="text-[12px] leading-none">{ev.time}</span>
+                            <PlaceTag place={ev.place} />
+                          </span>
                         </button>
                       ))}
                     </div>
