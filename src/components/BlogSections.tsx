@@ -102,17 +102,17 @@ export const BlogPostPage: React.FC<NavProps & { post: BlogEntry }> = ({ post, .
   const index = BLOG_POSTS.findIndex((p) => p.slug === post.slug);
   const older = BLOG_POSTS[index + 1];
   return (
-    <SubpageShell eyebrow={formatBlogDate(post.date)} title={post.title} meta={post.excerpt} {...nav}>
+    <SubpageShell eyebrow={formatBlogDate(post.date)} title={post.title} meta={post.excerpt} light {...nav}>
       <article>
         {post.coverSrc && <img src={post.coverSrc} alt={post.title} decoding="async" className="w-full rounded-[20px] mb-10 aspect-[16/10] object-cover" />}
-        <Markdown text={post.body} />
+        <Markdown text={post.body} light />
       </article>
-      <div className="mt-14 pt-8 border-t border-white/10 flex flex-col sm:flex-row gap-4 justify-between">
-        <a {...openLink(BLOG_SLUG, nav.onOpenLegal)} className="inline-flex items-center gap-2 text-[#dec69a] hover:text-white text-[14px] font-medium">
+      <div className="mt-14 pt-8 border-t border-[#020201]/10 flex flex-col sm:flex-row gap-4 justify-between">
+        <a {...openLink(BLOG_SLUG, nav.onOpenLegal)} className="inline-flex items-center gap-2 text-[#8c4503] hover:text-[#020201] text-[14px] font-medium">
           <ArrowLeft className="w-4 h-4" /> Все записи блога
         </a>
         {older && (
-          <a {...openLink(older.pageSlug, nav.onOpenLegal)} className="inline-flex items-center gap-2 text-[#dec69a] hover:text-white text-[14px] font-medium sm:text-right">
+          <a {...openLink(older.pageSlug, nav.onOpenLegal)} className="inline-flex items-center gap-2 text-[#8c4503] hover:text-[#020201] text-[14px] font-medium sm:text-right">
             {older.title} <ArrowRight className="w-4 h-4 shrink-0" />
           </a>
         )}

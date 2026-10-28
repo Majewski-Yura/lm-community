@@ -7,7 +7,7 @@ import { img } from '../content/store';
 
 const INLINE = /(\*\*[^*]+\*\*|\[[^\]]+\]\([^)\s]+\))/g;
 
-function inline(text: string, keyPrefix: string): React.ReactNode[] {
+function inline(text: string, keyPrefix: string, light = false): React.ReactNode[] {
   return text.split(INLINE).map((part, i) => {
     const key = `${keyPrefix}-${i}`;
     const bold = part.match(/^\*\*([^*]+)\*\*$/);
@@ -18,7 +18,7 @@ function inline(text: string, keyPrefix: string): React.ReactNode[] {
       const safe = /^(https?:\/\/|\/|#|mailto:|tel:)/i.test(href) ? href : '#';
       const external = /^https?:\/\//i.test(safe);
       return (
-        <a key={key} href={safe} target={external ? '_blank' : undefined} rel={external ? 'noopener noreferrer' : undefined} className="text-[#f9cd60] underline underline-offset-4 hover:text-white">
+        <a key={key} href={safe} target={external ? '_blank' : undefined} rel={external ? 'noopener noreferrer' : undefined} className={`underline underline-offset-4 ${light ? 'text-[#8c4503] hover:text-[#020201]' : 'text-[#f9cd60] hover:text-white'}`}>
           {link[1]}
         </a>
       );
@@ -27,24 +27,24 @@ function inline(text: string, keyPrefix: string): React.ReactNode[] {
   });
 }
 
-export const Markdown: React.FC<{ text: string }> = ({ text }) => {
+export const Markdown: React.FC<{ text: string; light?: boolean }> = ({ text, light = false }) => {
   const blocks = text.replace(/\r\n?/g, '\n').split(/\n{2,}/).map((b) => b.trim()).filter(Boolean);
   return (
-    <div className="space-y-6 text-white/85 text-[16px] sm:text-[17px] leading-[1.7]">
+    <div className={`space-y-6 ${light ? 'text-[#3c3836]' : 'text-white/85'} text-[16px] sm:text-[17px] leading-[1.7]`}>
       {blocks.map((block, i) => {
         const photo = block.match(/^!\[([^\]]*)\]\(([^)\s]+)\)$/);
         if (photo) {
           return (
             <figure key={i} className="my-8">
               <img src={img(photo[2])} alt={photo[1]} loading="lazy" decoding="async" className="w-full rounded-[16px]" />
-              {photo[1] && <figcaption className="mt-3 text-[14px] text-white/55 text-center">{photo[1]}</figcaption>}
+              {photo[1] && <figcaption className={`mt-3 text-[14px] text-center ${light ? 'text-[#3c3836]/70' : 'text-white/55'}`}>{photo[1]}</figcaption>}
             </figure>
           );
         }
         if (block.startsWith('## ')) {
           return (
-            <h2 key={i} className="pt-4 font-headline text-white text-[24px] sm:text-[28px] font-medium leading-[1.25]">
-              {inline(block.slice(3), `h${i}`)}
+            <h2 key={i} className={`pt-4 font-headline ${light ? 'text-[#020201]' : 'text-white'} text-[24px] sm:text-[28px] font-medium leading-[1.25]`}>
+              {inline(block.slice(3), `h${i}`, light)}
             </h2>
           );
         }
@@ -54,8 +54,8 @@ export const Markdown: React.FC<{ text: string }> = ({ text }) => {
             <ul key={i} className="space-y-2.5">
               {lines.map((l, j) => (
                 <li key={j} className="flex gap-3">
-                  <span aria-hidden="true" className="mt-[11px] w-1.5 h-1.5 rounded-full bg-[#f9cd60] shrink-0" />
-                  <span>{inline(l.replace(/^[-•]\s+/, ''), `l${i}-${j}`)}</span>
+                  <span aria-hidden="true" className={`mt-[11px] w-1.5 h-1.5 rounded-full shrink-0 ${light ? 'bg-[#d28802]' : 'bg-[#f9cd60]'}`} />
+                  <span>{inline(l.replace(/^[-•]\s+/, ''), `l${i}-${j}`, light)}</span>
                 </li>
               ))}
             </ul>
@@ -66,7 +66,7 @@ export const Markdown: React.FC<{ text: string }> = ({ text }) => {
             {lines.map((l, j) => (
               <React.Fragment key={j}>
                 {j > 0 && <br />}
-                {inline(l, `p${i}-${j}`)}
+                {inline(l, `p${i}-${j}`, light)}
               </React.Fragment>
             ))}
           </p>
