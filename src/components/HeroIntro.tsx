@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { C } from '../content/store';
 import { BriefcaseMedical, Building2, Play, Stethoscope, Users, type LucideIcon } from 'lucide-react';
-import { ASSETS, INTRO_VIDEO_EMBED_URL, WHO_ROLES } from '../data/siteContent';
+import { ASSETS, INTRO_VIDEO_EMBED_URL, JOIN_URL, WHO_ROLES } from '../data/siteContent';
 import { Eyebrow, JoinButton } from './ui';
 
 /** Иконки ролей по порядку WHO_ROLES: главврачи, заведующие, меддиректора, CEO и основатели. */
@@ -218,6 +218,7 @@ export const HeroIntro: React.FC<HeroIntroProps> = ({ onNavigateAnchor }) => {
                 <p className="mt-4 text-[#020201] text-[15px] font-medium leading-[1.63] border-l-2 border-[#d28802] pl-4">
                   {C.who.cardAccent}
                 </p>
+                <JoinButton href={JOIN_URL} external variant="dark" label="Стать Человеком медицины" className="mt-8 self-stretch sm:self-start min-w-0! sm:min-w-[270px]! px-6!" />
               </div>
             </div>
           </div>

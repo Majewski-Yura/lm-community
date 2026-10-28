@@ -1,5 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { C } from '../content/store';
+import { JOIN_URL } from '../data/siteContent';
+import { JoinButton } from './ui';
 import { CalendarDays, ChevronDown, Clock, Mic, X } from 'lucide-react';
 import {
   CALENDAR_EVENTS,
@@ -45,7 +47,7 @@ const MOBILE_VISIBLE_EVENTS = highlightIndex >= 0 ? highlightIndex + 1 : 4;
 /** Плашка формата как в карточках программы: белая, бежевая обводка, цветная точка (онлайн — охра, офлайн — тёмная). */
 const PlaceTag: React.FC<{ place: CalendarEvent['place'] }> = ({ place }) => (
   <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-[#e3d6bf] bg-white px-2.5 py-0.5 text-[#020201] text-[12px] font-medium leading-[1.5]">
-    <span aria-hidden="true" className={`w-2 h-2 rounded-full ${place === 'online' ? 'bg-[#d4943a]' : 'bg-[#3c3836]'}`} />
+    <span aria-hidden="true" className={`w-2 h-2 rounded-full ${place === 'online' ? 'bg-[#d4943a]' : 'bg-[#eee6d7] ring-1 ring-inset ring-[#020201]/30'}`} />
     {PLACE_META[place].label}
   </span>
 );
@@ -55,7 +57,7 @@ const PlaceDot: React.FC<{ place: CalendarEvent['place']; onDark?: boolean }> = 
   <span
     aria-label={PLACE_META[place].label}
     className={`inline-block w-5 h-5 lg:w-6 lg:h-6 rounded-full shrink-0 ${
-      place === 'online' ? 'bg-[#d4943a]' : onDark ? 'ring-[1.5px] ring-inset ring-white' : 'bg-[#3c3836]'
+      place === 'online' ? 'bg-[#d4943a]' : onDark ? 'bg-[#eee6d7]' : 'bg-[#eee6d7] ring-1 ring-inset ring-[#020201]/25'
     }`}
   />
 );
@@ -172,8 +174,8 @@ export const CalendarSection: React.FC<CalendarSectionProps> = ({ onNavigateAnch
                       className={`${cardClass} cursor-pointer transition-colors ${highlight ? 'hover:bg-[#962630]' : 'hover:bg-[#f9cd60]'}`}
                     >
                       {dayRow}
-                      <span className="mt-4 text-[14px] lg:text-[16px] font-medium leading-[1.3] line-clamp-5 hyphens-auto lg:hyphens-manual break-words">{ev.title}</span>
-                      {ev.time && <span className="mt-auto pt-3 text-[14px] lg:text-[16px] leading-none">{ev.time}</span>}
+                      <span className="mt-3 text-[13px] lg:text-[14px] font-medium leading-[1.3] line-clamp-6 hyphens-auto lg:hyphens-manual break-words">{ev.title}</span>
+                      {ev.time && <span className="mt-auto pt-3 text-[13px] lg:text-[14px] leading-none">{ev.time}</span>}
                     </button>
                   );
                 }
@@ -190,8 +192,8 @@ export const CalendarSection: React.FC<CalendarSectionProps> = ({ onNavigateAnch
                           onClick={() => setActive(ev)}
                           className="text-left rounded-[8px] -mx-1.5 px-1.5 py-1 cursor-pointer transition-colors hover:bg-[#f9cd60]"
                         >
-                          <span className="block text-[13px] lg:text-[14px] font-medium leading-[1.3] line-clamp-3 hyphens-auto lg:hyphens-manual break-words">{ev.title}</span>
-                          {ev.time && <span className="block mt-1 text-[13px] leading-none">{ev.time}</span>}
+                          <span className="block text-[12px] lg:text-[13px] font-medium leading-[1.3] line-clamp-4 hyphens-auto lg:hyphens-manual break-words">{ev.title}</span>
+                          {ev.time && <span className="block mt-1 text-[12px] leading-none">{ev.time}</span>}
                         </button>
                       ))}
                     </div>
@@ -253,6 +255,9 @@ export const CalendarSection: React.FC<CalendarSectionProps> = ({ onNavigateAnch
             <p className="font-headline text-[#020201] text-[17px] sm:text-[20px] font-medium leading-[1.4]">
               {C.calendar.importantText}
             </p>
+          </div>
+          <div className="mt-8 flex justify-center">
+            <JoinButton href={JOIN_URL} external variant="gold" label="Присоединиться" className="w-full sm:w-auto" />
           </div>
         </div>
       </div>
@@ -362,6 +367,16 @@ export const CalendarSection: React.FC<CalendarSectionProps> = ({ onNavigateAnch
                 </a>
               )}
 
+              {active.format === 'conference' && active.link ? (
+                <a
+                  href={active.link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex w-full h-[50px] items-center justify-center rounded-[4px] bg-[#020201] hover:bg-[#d28802] text-white text-[13px] font-bold uppercase tracking-[1.2px] transition-colors"
+                >
+                  Зарегистрироваться
+                </a>
+              ) : (
               <a
                 href="#tarifi"
                 onClick={(e) => {
@@ -373,6 +388,7 @@ export const CalendarSection: React.FC<CalendarSectionProps> = ({ onNavigateAnch
               >
                 Вступить, чтобы участвовать
               </a>
+              )}
             </div>
           </div>
         </div>

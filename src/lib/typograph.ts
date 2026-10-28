@@ -7,6 +7,8 @@ const SHORT =
 const SHORT_WORD = new RegExp(`(?<=(?:^|[\\s\\u00A0«("„])(?:${SHORT}))[ \\t]+(?=\\S)`, 'giu');
 const NUMBER_WORD = /(?<=(?:^|[\s ])\d+[+%]?)[ \t]+(?=[А-Яа-яЁё])/gu;
 const BEFORE_DASH = /(?<=\S)[ \t]+(?=—)/gu;
+// «г. Москва», «ул. Ленина» — сокращение не отрывается от названия
+const ABBR = /(?<=(?:^|[\s\u00A0])(?:г|ул|д|им|т)\.)[ \t]+(?=[А-ЯЁ])/gu;
 const CYRILLIC = /[А-Яа-яЁё]/;
 
 /**
@@ -21,6 +23,7 @@ export function typograph(text: string): string {
   out = out.replace(SHORT_WORD, NBSP).replace(SHORT_WORD, NBSP);
   out = out.replace(NUMBER_WORD, NBSP);
   out = out.replace(BEFORE_DASH, NBSP);
+  out = out.replace(ABBR, NBSP);
   return out;
 }
 

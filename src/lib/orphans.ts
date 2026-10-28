@@ -45,7 +45,12 @@ function fixOrphans(root: ParentNode) {
     if (!/^[ \t\n]+$/.test(gap)) return;
     originals.set(text, value);
     text.nodeValue = value.slice(0, gapStart) + NBSP + value.slice(last.index!);
-    if (el.scrollWidth > el.clientWidth + 1) text.nodeValue = value;
+    // Пара не влезла: текст вылез за край или слово разорвалось посередине (break-words)
+    const newLast = gapStart + 1;
+    const broken =
+      wordRects(text, newLast, newLast + last[0].length).length !== 1 ||
+      wordRects(text, prev.index!, gapStart).length !== 1;
+    if (broken || el.scrollWidth > el.clientWidth + 1) text.nodeValue = value;
   });
 }
 

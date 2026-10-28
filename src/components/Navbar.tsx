@@ -48,7 +48,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigateAnchor, isSubpage = fa
       <div className="fixed top-0 left-0 right-0 z-[1000] h-[3px] pointer-events-none bg-transparent">
         <div
           data-lm="progress"
-          className="h-full bg-[#dec69a] transition-[width] duration-75 ease-out"
+          className="h-full bg-[#f9cd60] transition-[width] duration-75 ease-out"
           style={{ width: `${scrollProgress}%` }}
         />
       </div>
@@ -84,7 +84,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigateAnchor, isSubpage = fa
                 key={item.href + item.label}
                 href={item.href}
                 onClick={(e) => handleLinkClick(e, item.href)}
-                className="text-[13px] xl:text-[14px] font-medium text-[#dec69a] hover:text-white transition-colors duration-300 whitespace-nowrap"
+                className="text-[13px] xl:text-[14px] font-medium text-[#f9cd60] hover:text-white transition-colors duration-300 whitespace-nowrap"
               >
                 {item.label}
               </a>
@@ -96,7 +96,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigateAnchor, isSubpage = fa
             <a
               href="#tarifi"
               onClick={(e) => handleLinkClick(e, '#tarifi')}
-              className="lm-btn-ripple inline-flex items-center justify-center bg-[#dec69a] hover:bg-white text-[#020201] font-semibold text-[12px] uppercase tracking-[0.4px] rounded-[4px] px-5 py-2.5 transition-colors duration-200"
+              className="lm-btn-ripple inline-flex items-center justify-center bg-[#f9cd60] hover:bg-white text-[#020201] font-semibold text-[12px] uppercase tracking-[0.4px] rounded-[4px] px-5 py-2.5 transition-colors duration-200"
             >
               Вступить
             </a>
@@ -125,7 +125,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigateAnchor, isSubpage = fa
           onClick={() => setMobileOpen((prev) => !prev)}
           aria-expanded={mobileOpen}
           aria-label="Навигационное меню"
-          className="w-10 h-10 bg-[#dec69a] rounded-[4px] flex flex-col items-center justify-center gap-[5px] cursor-pointer focus:outline-none"
+          className="w-10 h-10 bg-[#f9cd60] rounded-[4px] flex flex-col items-center justify-center gap-[5px] cursor-pointer focus:outline-none"
         >
           <span
             data-lm-line=""
@@ -158,14 +158,14 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigateAnchor, isSubpage = fa
             className="absolute inset-0 bg-black/60"
             onClick={() => setMobileOpen(false)}
           />
-          <div className="absolute top-[64px] right-0 bottom-0 w-full max-w-[340px] bg-[#020201] px-6 py-8 flex flex-col items-center justify-between overflow-y-auto border-l border-[#dec69a]/15">
+          <div className="absolute top-[64px] right-0 bottom-0 w-full max-w-[340px] bg-[#020201] px-6 py-8 flex flex-col items-center justify-between overflow-y-auto border-l border-[#f9cd60]/15">
             <nav className="flex flex-col items-center gap-5 w-full mt-2">
               {NAV_LINKS.map((item) => (
                 <a
                   key={item.href + item.label}
                   href={item.href}
                   onClick={(e) => handleLinkClick(e, item.href)}
-                  className="text-[16px] font-medium text-[#dec69a] hover:text-white transition-colors"
+                  className="text-[16px] font-medium text-[#f9cd60] hover:text-white transition-colors"
                 >
                   {item.label}
                 </a>
@@ -175,7 +175,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigateAnchor, isSubpage = fa
             <a
               href="#tarifi"
               onClick={(e) => handleLinkClick(e, '#tarifi')}
-              className="mt-8 w-full max-w-[240px] inline-flex items-center justify-center bg-[#dec69a] hover:bg-white text-[#020201] font-semibold text-[12px] uppercase tracking-[0.6px] rounded-[4px] py-3.5 transition-colors"
+              className="mt-8 w-full max-w-[240px] inline-flex items-center justify-center bg-[#f9cd60] hover:bg-white text-[#020201] font-semibold text-[12px] uppercase tracking-[0.6px] rounded-[4px] py-3.5 transition-colors"
             >
               Вступить
             </a>
