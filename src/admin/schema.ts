@@ -371,7 +371,7 @@ export const SECTIONS: Section[] = [
       },
     ],
   },
-  { id: 'final', title: 'Финальный блок', fields: [title, { key: 'text', label: 'Текст', type: 'textarea', rows: 4 }] },
+  { id: 'final', title: 'Финальный блок', fields: [title, { key: 'text', label: 'Текст', type: 'textarea', rows: 4 }, { key: 'photo', label: 'Фото на фоне', type: 'image', kind: 'photo', help: 'Горизонтальное фото, сайт затемнит его, чтобы текст читался.' }] },
   {
     id: 'seo',
     title: 'SEO и ссылки',

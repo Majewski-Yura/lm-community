@@ -559,10 +559,6 @@
   "gallery": {
     "photos": [
       {
-        "src": "/images/gallery-1.webp",
-        "thumb": "/images/gallery-1-thumb.webp"
-      },
-      {
         "src": "/images/gallery-2.webp",
         "thumb": "/images/gallery-2-thumb.webp"
       },
@@ -575,12 +571,24 @@
         "thumb": "/images/gallery-4-thumb.webp"
       },
       {
-        "src": "/images/gallery-5.webp",
-        "thumb": "/images/gallery-5-thumb.webp"
-      },
-      {
         "src": "/images/gallery-6.webp",
         "thumb": "/images/gallery-6-thumb.webp"
+      },
+      {
+        "src": "/images/gallery-7.webp",
+        "thumb": "/images/gallery-7-thumb.webp"
+      },
+      {
+        "src": "/images/gallery-8.webp",
+        "thumb": "/images/gallery-8-thumb.webp"
+      },
+      {
+        "src": "/images/gallery-9.webp",
+        "thumb": "/images/gallery-9-thumb.webp"
+      },
+      {
+        "src": "/images/gallery-10.webp",
+        "thumb": "/images/gallery-10-thumb.webp"
       }
     ]
   },
@@ -760,7 +768,8 @@
   },
   "final": {
     "title": "Вы не одни!",
-    "text": "В «Люди Медицины» можно прийти не только с готовыми ответами и успехами, но и с вопросами, сомнениями и самыми сложными ситуациями. Здесь можно не знать, как поступить, и смело просить помощи у тех, кто точно поймет и всегда поддержит!"
+    "text": "В «Люди Медицины» можно прийти не только с готовыми ответами и успехами, но и с вопросами, сомнениями и самыми сложными ситуациями. Здесь можно не знать, как поступить, и смело просить помощи у тех, кто точно поймет и всегда поддержит!",
+    "photo": "/images/final-bg.webp"
   },
   "footer": {
     "legal": [
