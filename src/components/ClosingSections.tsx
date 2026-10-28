@@ -177,13 +177,16 @@ export const ClosingSections: React.FC<ClosingSectionsProps> = ({ onNavigateAnch
       <section className="relative overflow-hidden bg-[#020201] py-20 sm:py-[110px] lg:py-[150px]">
         {C.final.photo && (
           <>
-            <img src={img(C.final.photo)} alt="" aria-hidden="true" loading="lazy" decoding="async" className="absolute inset-0 w-full h-full object-cover object-[60%_30%]" />
+            <img src={img(C.final.photo)} alt="" aria-hidden="true" loading="lazy" decoding="async" className="absolute inset-0 w-full h-full object-cover object-[70%_30%]" />
             {/* Затемнение: текст читается на любом фото */}
-            <div aria-hidden="true" className="absolute inset-0 bg-[#020201]/60" />
-            <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-[#020201]/70 via-transparent to-[#020201]/40" />
+            <div aria-hidden="true" className="absolute inset-0 bg-[#020201]/35" />
+            {/* Слева темнее — там текст, справа видно людей на фото */}
+            <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-r from-[#020201]/90 via-[#020201]/60 to-transparent" />
           </>
         )}
-        <div className="relative max-w-[860px] mx-auto px-6 flex flex-col items-center text-center">
+        <div className="relative max-w-[1280px] mx-auto px-4 sm:px-5">
+          <div className="max-w-[1240px] mx-auto">
+          <div className="max-w-[620px] flex flex-col items-start text-left">
           <h2 className="font-headline text-white text-[36px] sm:text-[44px] lg:text-[52px] font-semibold leading-[1.1]">
             {C.final.title}
           </h2>
@@ -191,6 +194,8 @@ export const ClosingSections: React.FC<ClosingSectionsProps> = ({ onNavigateAnch
             {C.final.text}
           </p>
           <JoinButton href={JOIN_URL} external variant="gold" className="mt-10" />
+          </div>
+          </div>
         </div>
       </section>
     </>
