@@ -1,9 +1,10 @@
 import React from 'react';
 import { img } from '../content/store';
 import { videoEmbed } from '../lib/video';
+import { PhotoSlider } from './PhotoSlider';
 
 // Простая разметка текста записей блога: абзацы через пустую строку, «## » — подзаголовок,
-// «- » — список, строка ![подпись](/uploads/…) — фото, строка @[подпись](https://rutube.ru/…) или просто
+// «- » — список, строка ![подпись](/uploads/…) — фото, несколько таких строк подряд в одном абзаце — слайдер, строка @[подпись](https://rutube.ru/…) или просто
 // ссылка на RuTube, VK Видео, YouTube — видео, [текст](https://…) — ссылка, **жирный**.
 // Собираем React-элементы, а не HTML: текст из админки не может вставить на страницу чужой код.
 
@@ -34,6 +35,10 @@ export const Markdown: React.FC<{ text: string; light?: boolean }> = ({ text, li
   return (
     <div className={`space-y-6 ${light ? 'text-[#3c3836]' : 'text-white/85'} text-[16px] sm:text-[17px] leading-[1.7]`}>
       {blocks.map((block, i) => {
+        const photoLines = block.split('\n').map((l) => l.trim().match(/^!\[([^\]]*)\]\(([^)\s]+)\)$/));
+        if (photoLines.length > 1 && photoLines.every(Boolean)) {
+          return <PhotoSlider key={i} light={light} photos={photoLines.map((m) => ({ src: img(m![2]) ?? m![2], caption: m![1] }))} />;
+        }
         const photo = block.match(/^!\[([^\]]*)\]\(([^)\s]+)\)$/);
         if (photo) {
           return (

@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { ArrowDown, ArrowUp, ChevronDown, ChevronRight, ImagePlus, Loader2, Plus, Trash2, Video, X } from 'lucide-react';
+import { ArrowDown, ArrowUp, ChevronDown, ChevronRight, GalleryHorizontal, ImagePlus, Loader2, Plus, Trash2, Video, X } from 'lucide-react';
 import { api } from './api';
 import { prepareImage, type ImageKind } from './image';
 import type { Field } from './schema';
@@ -133,10 +133,11 @@ function IconButton({ icon, onClick, title, disabled, danger }: { icon: React.Re
   );
 }
 
-/** Текст записи блога: абзацы, подзаголовки, фото и видео прямо в тексте. */
+/** Текст записи блога: абзацы, подзаголовки, фото, слайдеры и видео прямо в тексте. */
 function MarkdownInput({ value, onChange }: { value: string; onChange: (v: string) => void }) {
   const ref = useRef<HTMLTextAreaElement>(null);
   const fileRef = useRef<HTMLInputElement>(null);
+  const sliderRef = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const [videoOpen, setVideoOpen] = useState(false);
@@ -178,6 +179,31 @@ function MarkdownInput({ value, onChange }: { value: string; onChange: (v: strin
     }
   };
 
+  // Слайдер — несколько строк с фото подряд, без пустых строк между ними
+  const addSlider = async (files: File[]) => {
+    if (files.length < 2) {
+      setError('Для слайдера выберите хотя бы 2 фото. Одно фото вставляйте кнопкой «Фото в текст».');
+      if (sliderRef.current) sliderRef.current.value = '';
+      return;
+    }
+    setBusy(true);
+    setError('');
+    try {
+      const lines: string[] = [];
+      for (const file of files) {
+        const { blob, name } = await prepareImage(file, 'photo');
+        const path = await api.upload(blob, name);
+        lines.push(`![Подпись к фото](${path})`);
+      }
+      insert(lines.join('\n'));
+    } catch (e) {
+      setError((e as Error).message);
+    } finally {
+      setBusy(false);
+      if (sliderRef.current) sliderRef.current.value = '';
+    }
+  };
+
   return (
     <div>
       <div className="flex flex-wrap gap-2 mb-2">
@@ -190,6 +216,10 @@ function MarkdownInput({ value, onChange }: { value: string; onChange: (v: strin
         <input ref={fileRef} type="file" accept="image/jpeg,image/png,image/webp,image/heic" className="hidden" onChange={(e) => e.target.files?.[0] && addPhoto(e.target.files[0])} />
         <button type="button" disabled={busy} onClick={() => fileRef.current?.click()} className="inline-flex items-center gap-1.5 rounded-[8px] bg-[#1d1b19] text-white px-3 py-1.5 text-[13px] disabled:opacity-60 cursor-pointer">
           {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <ImagePlus className="w-4 h-4" />} Фото в текст
+        </button>
+        <input ref={sliderRef} type="file" multiple accept="image/jpeg,image/png,image/webp,image/heic" className="hidden" onChange={(e) => e.target.files && addSlider(Array.from(e.target.files))} />
+        <button type="button" disabled={busy} onClick={() => sliderRef.current?.click()} className="inline-flex items-center gap-1.5 rounded-[8px] bg-[#1d1b19] text-white px-3 py-1.5 text-[13px] disabled:opacity-60 cursor-pointer">
+          {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <GalleryHorizontal className="w-4 h-4" />} Слайдер
         </button>
         <button type="button" onClick={() => setVideoOpen((v) => !v)} className="inline-flex items-center gap-1.5 rounded-[8px] bg-[#1d1b19] text-white px-3 py-1.5 text-[13px] cursor-pointer">
           <Video className="w-4 h-4" /> Видео в текст
@@ -217,7 +247,7 @@ function MarkdownInput({ value, onChange }: { value: string; onChange: (v: strin
       )}
       <textarea ref={ref} rows={14} value={value} onChange={(e) => onChange(e.target.value)} className={`${inputClass} font-mono text-[14px]`} />
       <div className="text-[12px] text-[#1d1b19]/55 mt-1 leading-[1.5]">
-        Абзацы разделяйте пустой строкой. «## » в начале строки — подзаголовок, «- » — пункт списка. Фото и видео вставляются кнопками; текст в квадратных скобках — подпись. Видео можно добавить и просто ссылкой на ролик отдельным абзацем.
+        Абзацы разделяйте пустой строкой. «## » в начале строки — подзаголовок, «- » — пункт списка. Фото, слайдер и видео вставляются кнопками; текст в квадратных скобках — подпись. Слайдер — это несколько строк с фото подряд, без пустых строк между ними: так можно добавить или убрать фото. Видео можно добавить и просто ссылкой на ролик отдельным абзацем.
       </div>
       {error && <div className="text-[12px] text-[#b3261e] mt-1">{error}</div>}
     </div>
