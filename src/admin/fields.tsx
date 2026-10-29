@@ -1,8 +1,9 @@
 import React, { useRef, useState } from 'react';
-import { ArrowDown, ArrowUp, ChevronDown, ChevronRight, ImagePlus, Loader2, Plus, Trash2, X } from 'lucide-react';
+import { ArrowDown, ArrowUp, ChevronDown, ChevronRight, ImagePlus, Loader2, Plus, Trash2, Video, X } from 'lucide-react';
 import { api } from './api';
 import { prepareImage, type ImageKind } from './image';
 import type { Field } from './schema';
+import { videoEmbed } from '../lib/video';
 
 type Obj = Record<string, unknown>;
 
@@ -132,12 +133,26 @@ function IconButton({ icon, onClick, title, disabled, danger }: { icon: React.Re
   );
 }
 
-/** Текст записи блога: абзацы, подзаголовки и фото прямо в тексте. */
+/** Текст записи блога: абзацы, подзаголовки, фото и видео прямо в тексте. */
 function MarkdownInput({ value, onChange }: { value: string; onChange: (v: string) => void }) {
   const ref = useRef<HTMLTextAreaElement>(null);
   const fileRef = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
+  const [videoOpen, setVideoOpen] = useState(false);
+  const [videoUrl, setVideoUrl] = useState('');
+
+  const addVideo = () => {
+    const video = videoEmbed(videoUrl);
+    if (!video) {
+      setError('Не получилось распознать ссылку. Подходят ролики с RuTube, VK Видео и YouTube — скопируйте ссылку из адресной строки или кнопки «Поделиться».');
+      return;
+    }
+    setError('');
+    insert(`@[Подпись к видео](${videoUrl.trim()})`);
+    setVideoUrl('');
+    setVideoOpen(false);
+  };
 
   const insert = (snippet: string) => {
     const el = ref.current;
@@ -176,10 +191,33 @@ function MarkdownInput({ value, onChange }: { value: string; onChange: (v: strin
         <button type="button" disabled={busy} onClick={() => fileRef.current?.click()} className="inline-flex items-center gap-1.5 rounded-[8px] bg-[#1d1b19] text-white px-3 py-1.5 text-[13px] disabled:opacity-60 cursor-pointer">
           {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <ImagePlus className="w-4 h-4" />} Фото в текст
         </button>
+        <button type="button" onClick={() => setVideoOpen((v) => !v)} className="inline-flex items-center gap-1.5 rounded-[8px] bg-[#1d1b19] text-white px-3 py-1.5 text-[13px] cursor-pointer">
+          <Video className="w-4 h-4" /> Видео в текст
+        </button>
       </div>
+      {videoOpen && (
+        <div className="flex flex-wrap gap-2 mb-2">
+          <input
+            autoFocus
+            value={videoUrl}
+            onChange={(e) => setVideoUrl(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                addVideo();
+              }
+            }}
+            placeholder="Ссылка на ролик: rutube.ru/video/…, vkvideo.ru/video-…, youtu.be/…"
+            className={`${inputClass} flex-1 min-w-[240px]`}
+          />
+          <button type="button" onClick={addVideo} className="rounded-[8px] bg-[#9a6418] text-white px-4 py-1.5 text-[13px] font-semibold cursor-pointer">
+            Вставить
+          </button>
+        </div>
+      )}
       <textarea ref={ref} rows={14} value={value} onChange={(e) => onChange(e.target.value)} className={`${inputClass} font-mono text-[14px]`} />
       <div className="text-[12px] text-[#1d1b19]/55 mt-1 leading-[1.5]">
-        Абзацы разделяйте пустой строкой. «## » в начале строки — подзаголовок, «- » — пункт списка. Фото вставляется кнопкой; текст в квадратных скобках — подпись под ним.
+        Абзацы разделяйте пустой строкой. «## » в начале строки — подзаголовок, «- » — пункт списка. Фото и видео вставляются кнопками; текст в квадратных скобках — подпись. Видео можно добавить и просто ссылкой на ролик отдельным абзацем.
       </div>
       {error && <div className="text-[12px] text-[#b3261e] mt-1">{error}</div>}
     </div>

@@ -1,8 +1,10 @@
 import React from 'react';
 import { img } from '../content/store';
+import { videoEmbed } from '../lib/video';
 
 // Простая разметка текста записей блога: абзацы через пустую строку, «## » — подзаголовок,
-// «- » — список, строка ![подпись](/uploads/…) — фото, [текст](https://…) — ссылка, **жирный**.
+// «- » — список, строка ![подпись](/uploads/…) — фото, строка @[подпись](https://rutube.ru/…) или просто
+// ссылка на RuTube, VK Видео, YouTube — видео, [текст](https://…) — ссылка, **жирный**.
 // Собираем React-элементы, а не HTML: текст из админки не может вставить на страницу чужой код.
 
 const INLINE = /(\*\*[^*]+\*\*|\[[^\]]+\]\([^)\s]+\))/g;
@@ -38,6 +40,27 @@ export const Markdown: React.FC<{ text: string; light?: boolean }> = ({ text, li
             <figure key={i} className="my-8">
               <img src={img(photo[2])} alt={photo[1]} loading="lazy" decoding="async" className="w-full rounded-[16px]" />
               {photo[1] && <figcaption className={`mt-3 text-[14px] text-center ${light ? 'text-[#3c3836]/70' : 'text-white/55'}`}>{photo[1]}</figcaption>}
+            </figure>
+          );
+        }
+        const videoMatch = block.match(/^@\[([^\]]*)\]\(([^)\s]+)\)$/) ?? (/^https?:\/\/\S+$/.test(block) ? [block, '', block] : null);
+        const video = videoMatch ? videoEmbed(videoMatch[2]) : null;
+        if (video && videoMatch) {
+          const caption = videoMatch[1];
+          return (
+            <figure key={i} className="my-8">
+              <div className="relative w-full aspect-video overflow-hidden rounded-[16px] bg-[#020201]">
+                <iframe
+                  src={video.src}
+                  title={caption || `Видео (${video.provider})`}
+                  loading="lazy"
+                  allow="autoplay; encrypted-media; fullscreen; picture-in-picture; clipboard-write"
+                  allowFullScreen
+                  referrerPolicy="strict-origin-when-cross-origin"
+                  className="absolute inset-0 w-full h-full border-0"
+                />
+              </div>
+              {caption && <figcaption className={`mt-3 text-[14px] text-center ${light ? 'text-[#3c3836]/70' : 'text-white/55'}`}>{caption}</figcaption>}
             </figure>
           );
         }
@@ -80,6 +103,7 @@ export const Markdown: React.FC<{ text: string; light?: boolean }> = ({ text, li
 export function markdownToPlain(text: string): string {
   return text
     .replace(/!\[([^\]]*)\]\([^)]*\)/g, (_m, alt) => (alt ? `[Фото: ${alt}]` : ''))
+    .replace(/@\[([^\]]*)\]\(([^)]*)\)/g, (_m, caption, url) => `[Видео${caption ? `: ${caption}` : ''}] (${url})`)
     .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '$1 ($2)')
     .replace(/\*\*([^*]+)\*\*/g, '$1')
     .replace(/^## /gm, '')
