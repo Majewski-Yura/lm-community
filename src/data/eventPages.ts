@@ -14,6 +14,8 @@ export interface EventPage {
   about: string;
   /** Обложка страницы (необязательно). */
   cover?: string;
+  /** Затемнение фото на фоне, % (0 — без затемнения). */
+  dim?: number;
   registration: 'open' | 'closed';
 }
 

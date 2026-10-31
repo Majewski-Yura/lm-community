@@ -26,6 +26,12 @@ const WhatsAppIcon: React.FC<{ className?: string }> = ({ className }) => (
   </svg>
 );
 
+/** Затемнение фото: процент из админки (по умолчанию 75), сверху на 15 пунктов сильнее. */
+function overlay(dim?: number): string {
+  const d = Math.min(95, Math.max(0, Number.isFinite(dim) ? Number(dim) : 75)) / 100;
+  return `linear-gradient(to bottom, rgba(0,0,0,${Math.min(0.95, d + 0.15).toFixed(2)}), rgba(0,0,0,${d.toFixed(2)}))`;
+}
+
 /**
  * Страница события в вёрстке Tilda: экран с затемнённым фото, слева дата, место и заголовок,
  * справа бежевая карточка с формой записи (если запись открыта).
@@ -76,8 +82,8 @@ export const EventPageView: React.FC<EventPageViewProps> = ({ slug, onNavigateAn
         {event.cover && (
           <img src={event.cover} alt="" aria-hidden="true" decoding="async" className="absolute inset-0 w-full h-full object-cover" />
         )}
-        {/* Затемнение, как на Tilda: сверху сильнее */}
-        <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-b from-black/80 to-black/65" />
+        {/* Затемнение настраивается в админке; сверху чуть сильнее, как на Tilda */}
+        <div aria-hidden="true" className="absolute inset-0" style={{ background: overlay(event.dim) }} />
 
         <div
           className={`relative z-10 w-full max-w-[1280px] mx-auto px-4 sm:px-5 pt-[104px] pb-12 sm:pb-16 flex flex-col gap-10 ${

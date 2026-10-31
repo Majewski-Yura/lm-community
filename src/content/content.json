@@ -819,7 +819,8 @@
         "where": "Москва, ул. Трубецкая, 12",
         "about": "Увидеть опыт коллег, посмотреть, как устроена другая клиника, задать интересующие вопросы её топ-команде и собственникам.",
         "cover": "/images/events/ledin-clinic.webp",
-        "registration": "closed"
+        "registration": "closed",
+        "dim": 75
       },
       {
         "slug": "branch",
@@ -829,7 +830,8 @@
         "where": "Москва, ресторан Signature Art",
         "about": "Живые встречи и обмен энергией. Знакомимся с резидентами в уютной неформальной обстановке, делимся опытом.",
         "cover": "/images/events/branch.webp",
-        "registration": "closed"
+        "registration": "closed",
+        "dim": 75
       },
       {
         "slug": "bud-zdorov",
@@ -839,7 +841,8 @@
         "where": "Москва, Сущевский вал, 12",
         "about": "Увидеть опыт коллег, посмотреть, как устроена другая клиника, задать интересующие вопросы её топ-команде и собственникам.",
         "cover": "/images/events/bud-zdorov.webp",
-        "registration": "closed"
+        "registration": "closed",
+        "dim": 75
       }
     ]
   },

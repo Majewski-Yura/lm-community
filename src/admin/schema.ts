@@ -185,7 +185,7 @@ export const SECTIONS: Section[] = [
         thumb: 'cover',
         copyable: true,
         addLabel: 'Новая страница',
-        newItem: () => ({ slug: '', kind: 'Визит-экскурсия', title: '', when: '', where: '', about: '', cover: '', registration: 'closed' }),
+        newItem: () => ({ slug: '', kind: 'Визит-экскурсия', title: '', when: '', where: '', about: '', cover: '', dim: 75, registration: 'closed' }),
         fields: [
           { key: 'title', label: 'Заголовок', type: 'text', placeholder: 'Экскурсия в клинику «Будь здоров»' },
           { key: 'slug', label: 'Адрес страницы', type: 'text', help: 'Латиницей через дефис, например bud-zdorov → сайт.рф/bud-zdorov. Если пусто — придумается из заголовка.' },
@@ -193,7 +193,8 @@ export const SECTIONS: Section[] = [
           { key: 'when', label: 'Дата и время', type: 'text', placeholder: '29 октября 2026, 16:00–18:00' },
           { key: 'where', label: 'Место', type: 'text', placeholder: 'Москва, Сущевский вал, 12' },
           { key: 'about', label: 'Описание', type: 'textarea', rows: 4 },
-          { key: 'cover', label: 'Обложка (необязательно)', type: 'image', kind: 'photo' },
+          { key: 'cover', label: 'Фото на фоне', type: 'image', kind: 'photo', help: 'Горизонтальное фото на весь экран, текст будет поверх него.' },
+          { key: 'dim', label: 'Затемнение фото, %', type: 'number', min: 0, max: 95, help: '0 — фото как есть, 95 — почти чёрное. Обычно 70–80, чтобы текст хорошо читался.' },
           {
             key: 'registration',
             label: 'Запись',
