@@ -1,11 +1,72 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { CheckCircle2, ExternalLink, GraduationCap, History, Loader2, LogOut, Menu, Save, Send, Settings, X } from 'lucide-react';
+import {
+  BadgeRussianRuble,
+  BookOpen,
+  CalendarDays,
+  CalendarRange,
+  CheckCircle2,
+  Clapperboard,
+  Crown,
+  ExternalLink,
+  Footprints,
+  GraduationCap,
+  Heart,
+  History,
+  Images,
+  LayoutTemplate,
+  Link2,
+  Loader2,
+  LogOut,
+  Megaphone,
+  Menu,
+  MessageSquareQuote,
+  Network,
+  PanelBottom,
+  PanelTop,
+  Save,
+  Search,
+  Send,
+  Settings,
+  Sparkles,
+  Star,
+  Target,
+  UserRound,
+  Users,
+  X,
+  type LucideIcon,
+} from 'lucide-react';
 import { api, ApiError, type Backup, type ServerSettings } from './api';
 import { Fields } from './fields';
 import { Guide } from './Guide';
 import { publishSite } from './publish';
 import { SECTIONS } from './schema';
 import defaults from '../content/content.json';
+
+/** Иконки разделов в меню слева. */
+const SECTION_ICONS: Record<string, LucideIcon> = {
+  calendar: CalendarDays,
+  blog: BookOpen,
+  eventPages: CalendarRange,
+  hero: PanelTop,
+  video: Clapperboard,
+  who: Target,
+  participants: Users,
+  testimonials: MessageSquareQuote,
+  canDo: Sparkles,
+  experts: Star,
+  communityHas: LayoutTemplate,
+  communityExtra: Footprints,
+  tariff: BadgeRussianRuble,
+  gallery: Images,
+  founders: Crown,
+  cta: Megaphone,
+  values: Heart,
+  ecosystem: Network,
+  final: UserRound,
+  seo: Search,
+  links: Link2,
+  footer: PanelBottom,
+};
 
 type Content = Record<string, unknown>;
 type View = { kind: 'section'; id: string } | { kind: 'guide' } | { kind: 'backups' } | { kind: 'settings' };
@@ -364,8 +425,8 @@ export function AdminApp() {
             </button>
             <div className="h-px bg-[#1d1b19]/10 my-3" />
             {SECTIONS.map((s) => (
-              <button key={s.id} type="button" onClick={() => go({ kind: 'section', id: s.id })} className={navButton(view.kind === 'section' && view.id === s.id)}>
-                {s.title}
+              <button key={s.id} type="button" onClick={() => go({ kind: 'section', id: s.id })} className={`${navButton(view.kind === 'section' && view.id === s.id)} flex items-center gap-2`}>
+                {React.createElement(SECTION_ICONS[s.id] ?? LayoutTemplate, { className: 'w-4 h-4 shrink-0' })} {s.title}
               </button>
             ))}
             <div className="h-px bg-[#1d1b19]/10 my-3" />

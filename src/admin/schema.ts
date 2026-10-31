@@ -16,6 +16,8 @@ export type Field =
       /** Подпись элемента в свёрнутом виде, например имя участника. */
       title: (item: Record<string, unknown>, index: number) => string;
       thumb?: string;
+      /** Текст в кружке слева, если у элемента нет фото. По умолчанию — номер по порядку. */
+      badge?: (item: Record<string, unknown>, index: number) => string;
       fields: Field[];
       newItem: () => Record<string, unknown>;
       addLabel: string;
@@ -102,7 +104,8 @@ export const SECTIONS: Section[] = [
         key: 'events',
         label: 'События',
         type: 'list',
-        title: (item) => `${item.day || '?'} — ${item.title || 'Без названия'}`,
+        title: (item) => String(item.title || 'Без названия'),
+        badge: (item) => String(item.day || '?'),
         addLabel: 'Добавить событие',
         newItem: () => ({ day: 1, time: '', title: '', format: 'efir', place: 'online', speakers: [], description: '', theses: [], linkLabel: '', linkHref: '', highlight: false }),
         fields: [

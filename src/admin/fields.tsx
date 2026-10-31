@@ -273,8 +273,15 @@ function ListInput({ field, value, onChange }: { field: Extract<Field, { type: '
             <div className="flex items-center gap-2 p-2 pl-3">
               <button type="button" onClick={() => setOpen(isOpen ? null : i)} className="flex-1 flex items-center gap-3 text-left cursor-pointer min-w-0">
                 {isOpen ? <ChevronDown className="w-4 h-4 shrink-0" /> : <ChevronRight className="w-4 h-4 shrink-0" />}
-                {field.thumb && (
-                  <span className="w-9 h-9 shrink-0 rounded-[8px] overflow-hidden bg-[#1d1b19]/[0.06]">{thumb && <img src={src(thumb)} alt="" className="w-full h-full object-cover" />}</span>
+                {field.thumb && thumb ? (
+                  <span className="w-9 h-9 shrink-0 rounded-[8px] overflow-hidden bg-[#1d1b19]/[0.06]">
+                    <img src={src(thumb)} alt="" className="w-full h-full object-cover" />
+                  </span>
+                ) : (
+                  // Без фото — кружок с номером (или числом события), как у уроков во вкладке «Обучение»
+                  <span className="w-8 h-8 shrink-0 rounded-full bg-[#c98a35]/15 text-[#9a6418] text-[13px] font-semibold flex items-center justify-center">
+                    {field.badge ? field.badge(item, i) : i + 1}
+                  </span>
                 )}
                 <span className="truncate text-[14px] font-medium">{field.title(item, i)}</span>
               </button>
