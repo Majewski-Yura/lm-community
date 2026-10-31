@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { ArrowDown, ArrowUp, ChevronDown, ChevronRight, GalleryHorizontal, ImagePlus, Loader2, Plus, Trash2, Video, X } from 'lucide-react';
+import { ArrowDown, ArrowUp, ChevronDown, ChevronRight, Copy, GalleryHorizontal, ImagePlus, Loader2, Plus, Trash2, Video, X } from 'lucide-react';
 import { api } from './api';
 import { prepareImage, type ImageKind } from './image';
 import type { Field } from './schema';
@@ -278,6 +278,18 @@ function ListInput({ field, value, onChange }: { field: Extract<Field, { type: '
                 )}
                 <span className="truncate text-[14px] font-medium">{field.title(item, i)}</span>
               </button>
+              {field.copyable && (
+                <IconButton
+                  title="Создать копию"
+                  onClick={() => {
+                    // Копия встаёт сразу под оригиналом и открывается; адрес придумается из нового заголовка
+                    const copy: Obj = { ...JSON.parse(JSON.stringify(item)), slug: '', title: `${item.title || ''} (копия)` };
+                    onChange([...items.slice(0, i + 1), copy, ...items.slice(i + 1)]);
+                    setOpen(i + 1);
+                  }}
+                  icon={<Copy className="w-4 h-4" />}
+                />
+              )}
               <IconButton title="Выше" disabled={i === 0} onClick={() => move(i, -1)} icon={<ArrowUp className="w-4 h-4" />} />
               <IconButton title="Ниже" disabled={i === items.length - 1} onClick={() => move(i, 1)} icon={<ArrowDown className="w-4 h-4" />} />
               <IconButton

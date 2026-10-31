@@ -1,12 +1,14 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { CheckCircle2, ExternalLink, History, Loader2, LogOut, Menu, Save, Send, Settings, X } from 'lucide-react';
+import { CheckCircle2, ExternalLink, GraduationCap, History, Loader2, LogOut, Menu, Save, Send, Settings, X } from 'lucide-react';
 import { api, ApiError, type Backup, type ServerSettings } from './api';
 import { Fields } from './fields';
+import { Guide } from './Guide';
 import { publishSite } from './publish';
 import { SECTIONS } from './schema';
+import defaults from '../content/content.json';
 
 type Content = Record<string, unknown>;
-type View = { kind: 'section'; id: string } | { kind: 'backups' } | { kind: 'settings' };
+type View = { kind: 'section'; id: string } | { kind: 'guide' } | { kind: 'backups' } | { kind: 'settings' };
 
 const TRANSLIT: Record<string, string> = {
   а: 'a', б: 'b', в: 'v', г: 'g', д: 'd', е: 'e', ё: 'e', ж: 'zh', з: 'z', и: 'i', й: 'y', к: 'k', л: 'l', м: 'm', н: 'n', о: 'o', п: 'p',
@@ -26,6 +28,9 @@ export function slugify(text: string): string {
 }
 
 /** Перед сохранением: адреса записей блога и проверка ошибок, которые сломали бы сайт. */
+/** Адреса, занятые другими страницами и служебными папками сайта. */
+const RESERVED_SLUGS = ['blog', 'diagnostic', 'anketa', 'home', 'admin', 'api', 'private', 'uploads', 'images', 'assets', 'fonts', 'index', 'privacy-policy', 'oferta', 'pravila', 'soglasie-na-obrabotku'];
+
 function normalize(content: Content): { content: Content; problems: string[] } {
   const problems: string[] = [];
   const blog = (content.blog ?? {}) as { posts?: Record<string, unknown>[] };
@@ -43,7 +48,17 @@ function normalize(content: Content): { content: Content; problems: string[] } {
     if (!String(ev.title || '').trim()) problems.push(`Календарь: у события №${i + 1} нет названия`);
     if (!(day >= 1 && day <= 31)) problems.push(`Календарь: у события «${ev.title || i + 1}» неверное число`);
   });
-  return { content: { ...content, blog: { ...blog, posts } }, problems };
+  // Страницы мероприятий: адрес не должен совпадать с другими страницами сайта
+  const events = (content.eventPages ?? {}) as { items?: Record<string, unknown>[] };
+  const taken = new Set(RESERVED_SLUGS);
+  const items = (events.items ?? []).map((ev, i) => {
+    let slug = slugify(String(ev.slug || '')) || slugify(String(ev.title || '')) || `sobytie-${i + 1}`;
+    while (taken.has(slug)) slug = `${slug}-2`;
+    taken.add(slug);
+    if (!String(ev.title || '').trim()) problems.push(`Страницы мероприятий: у страницы №${i + 1} нет заголовка`);
+    return { ...ev, slug };
+  });
+  return { content: { ...content, blog: { ...blog, posts }, eventPages: { ...events, items } }, problems };
 }
 
 function Login({ needsSetup, onDone }: { needsSetup: boolean; onDone: () => void }) {
@@ -218,7 +233,7 @@ export function AdminApp() {
   const [state, setState] = useState<{ needsSetup: boolean; authed: boolean } | null>(null);
   const [content, setContent] = useState<Content | null>(null);
   const [dirty, setDirty] = useState(false);
-  const [view, setView] = useState<View>({ kind: 'section', id: SECTIONS[0].id });
+  const [view, setView] = useState<View>({ kind: 'guide' });
   const [status, setStatus] = useState<{ text: string; tone: 'info' | 'ok' | 'error' } | null>(null);
   const [busy, setBusy] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -227,7 +242,8 @@ export function AdminApp() {
     try {
       const s = await api.state();
       setState(s);
-      if (s.authed) setContent(await api.content());
+      // Разделы, которых нет в сохранённом содержимом (появились в новой версии сайта), берём по умолчанию
+      if (s.authed) setContent({ ...(defaults as Content), ...(await api.content()) });
     } catch (e) {
       setStatus({ text: (e as Error).message, tone: 'error' });
     }
@@ -343,6 +359,10 @@ export function AdminApp() {
       <div className="max-w-[1200px] mx-auto px-4 py-6 flex gap-8">
         <nav className={`${menuOpen ? 'block' : 'hidden'} lg:block fixed lg:static inset-x-0 top-16 bottom-0 z-10 lg:z-auto bg-[#f6f3ee] lg:bg-transparent overflow-y-auto p-4 lg:p-0 lg:w-[240px] shrink-0`}>
           <div className="space-y-1 lg:sticky lg:top-24">
+            <button type="button" onClick={() => go({ kind: 'guide' })} className={`${navButton(view.kind === 'guide')} flex items-center gap-2`}>
+              <GraduationCap className="w-4 h-4" /> Обучение
+            </button>
+            <div className="h-px bg-[#1d1b19]/10 my-3" />
             {SECTIONS.map((s) => (
               <button key={s.id} type="button" onClick={() => go({ kind: 'section', id: s.id })} className={navButton(view.kind === 'section' && view.id === s.id)}>
                 {s.title}
@@ -386,6 +406,13 @@ export function AdminApp() {
                   }}
                 />
               </div>
+            </>
+          )}
+          {view.kind === 'guide' && (
+            <>
+              <h1 className="text-[26px] font-semibold">Обучение</h1>
+              <p className="text-[14px] text-[#1d1b19]/60 mt-1 mb-6">Пошаговые инструкции: как обновить календарь, написать в блог, сделать страницу мероприятия и вернуть всё назад, если что-то пошло не так.</p>
+              <Guide onOpenSection={(id) => go({ kind: 'section', id })} />
             </>
           )}
           {view.kind === 'backups' && (

@@ -71,6 +71,9 @@ export const EventPageView: React.FC<EventPageViewProps> = ({ slug, ...props }) 
       }
       {...props}
     >
+      {event.cover && (
+        <img src={event.cover} alt={event.title} decoding="async" className="w-full max-w-[960px] rounded-[20px] mb-10 aspect-[16/9] object-cover" />
+      )}
       <p className="max-w-[720px] font-headline text-white text-[19px] sm:text-[22px] font-medium leading-[1.45]">{event.about}</p>
 
       {event.registration === 'closed' ? (

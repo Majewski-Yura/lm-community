@@ -19,6 +19,8 @@ export type Field =
       fields: Field[];
       newItem: () => Record<string, unknown>;
       addLabel: string;
+      /** Кнопка «Создать копию»: элемент дублируется со всеми полями. */
+      copyable?: boolean;
       help?: string;
     }
   | { key: string; label: string; type: 'markdown'; help?: string };
@@ -164,6 +166,42 @@ export const SECTIONS: Section[] = [
       eyebrow,
       title,
       { key: 'lead', label: 'Подзаголовок', type: 'textarea', rows: 2 },
+    ],
+  },
+  {
+    id: 'eventPages',
+    title: 'Страницы мероприятий',
+    hint: 'Отдельные страницы экскурсий, бранчей и других встреч. Чтобы сделать новую, нажмите «Создать копию» у похожей страницы и поменяйте текст.',
+    fields: [
+      {
+        key: 'items',
+        label: 'Страницы',
+        type: 'list',
+        title: (item) => `${item.registration === 'open' ? '[запись открыта] ' : ''}${item.title || 'Без названия'} — /${item.slug || '…'}`,
+        thumb: 'cover',
+        copyable: true,
+        addLabel: 'Новая страница',
+        newItem: () => ({ slug: '', kind: 'Визит-экскурсия', title: '', when: '', where: '', about: '', cover: '', registration: 'closed' }),
+        fields: [
+          { key: 'title', label: 'Заголовок', type: 'text', placeholder: 'Экскурсия в клинику «Будь здоров»' },
+          { key: 'slug', label: 'Адрес страницы', type: 'text', help: 'Латиницей через дефис, например bud-zdorov → сайт.рф/bud-zdorov. Если пусто — придумается из заголовка.' },
+          { key: 'kind', label: 'Тип события (над заголовком)', type: 'text', placeholder: 'Визит-экскурсия, Бранч, Квартирник' },
+          { key: 'when', label: 'Дата и время', type: 'text', placeholder: '29 октября 2026, 16:00–18:00' },
+          { key: 'where', label: 'Место', type: 'text', placeholder: 'Москва, Сущевский вал, 12' },
+          { key: 'about', label: 'Описание', type: 'textarea', rows: 4 },
+          { key: 'cover', label: 'Обложка (необязательно)', type: 'image', kind: 'photo' },
+          {
+            key: 'registration',
+            label: 'Запись',
+            type: 'select',
+            options: [
+              { value: 'open', label: 'Открыта — на странице форма записи' },
+              { value: 'closed', label: 'Закрыта — «Регистрация закрыта»' },
+            ],
+            help: 'Заявки с формы приходят туда же, куда остальные заявки сайта (настройки Telegram).',
+          },
+        ],
+      },
     ],
   },
   {
