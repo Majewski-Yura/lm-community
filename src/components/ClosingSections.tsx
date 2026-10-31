@@ -1,6 +1,7 @@
 import React from 'react';
 import { C, img } from '../content/store';
-import { GraduationCap, HandHeart, HeartHandshake, ShieldCheck, Sprout, type LucideIcon } from 'lucide-react';
+import { DEFAULT_ICONS } from '../lib/siteIcons';
+import { SiteIcon } from './SiteIcon';
 import {
   ASSETS,
   COMMUNITY_VALUES,
@@ -9,15 +10,6 @@ import {
 } from '../data/siteContent';
 import { Eyebrow, JoinButton, MobileSwiper } from './ui';
 import { BlogSection } from './BlogSections';
-
-/** Иконки ценностей по номеру: доверие, взаимность, профессионализм, бережность, развитие. */
-const VALUE_ICONS: Record<string, LucideIcon> = {
-  '01': ShieldCheck,
-  '02': HeartHandshake,
-  '03': GraduationCap,
-  '04': HandHeart,
-  '05': Sprout,
-};
 
 interface ClosingSectionsProps {
   onNavigateAnchor: (href: string) => void;
@@ -41,7 +33,7 @@ export const ClosingSections: React.FC<ClosingSectionsProps> = ({ onNavigateAnch
         <div
           aria-hidden="true"
           className="absolute inset-0 opacity-20 bg-cover bg-center"
-          style={{ backgroundImage: `url('${ASSETS.heroCrowdPhoto}')` }}
+          style={{ backgroundImage: `url('${img(C.cta.photo) ?? ASSETS.heroCrowdPhoto}')` }}
         />
         <div
           aria-hidden="true"
@@ -88,19 +80,16 @@ export const ClosingSections: React.FC<ClosingSectionsProps> = ({ onNavigateAnch
               {C.values.lead}
             </p>
             <MobileSwiper className="mt-7 sm:mt-10 lg:mt-[64px] sm:grid sm:grid-cols-2 lg:grid-cols-5 sm:gap-[24px]">
-              {COMMUNITY_VALUES.map((val) => {
-                const Icon = VALUE_ICONS[val.num];
+              {COMMUNITY_VALUES.map((val, i) => {
                 return (
                 <article
                   key={val.num}
                   className="rounded-[16px] bg-white border border-[#1a1612]/[0.08] p-7 lg:p-[28px] lg:min-h-[234px]"
                 >
                   <div className="flex items-start justify-between">
-                    {Icon && (
-                      <span className="w-12 h-12 rounded-[12px] bg-[#eee6d7] flex items-center justify-center">
-                        <Icon className="w-6 h-6 text-[#d28802]" strokeWidth={1.75} aria-hidden="true" />
-                      </span>
-                    )}
+                    <span className="w-12 h-12 rounded-[12px] bg-[#eee6d7] flex items-center justify-center">
+                      <SiteIcon name={(val as { icon?: string }).icon} fallback={DEFAULT_ICONS.values[i % DEFAULT_ICONS.values.length]} className="w-6 h-6 text-[#d28802]" />
+                    </span>
                     <span className="text-[#d28802] text-[12px] leading-[1.33] font-semibold">{val.num}</span>
                   </div>
                   <h3 className="mt-5 font-headline text-[#020201] text-[18px] font-semibold leading-[1.4]">

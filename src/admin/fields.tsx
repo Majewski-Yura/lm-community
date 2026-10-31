@@ -4,6 +4,7 @@ import { api } from './api';
 import { prepareImage, type ImageKind } from './image';
 import type { Field } from './schema';
 import { videoEmbed } from '../lib/video';
+import { SITE_ICONS } from '../lib/siteIcons';
 
 type Obj = Record<string, unknown>;
 
@@ -85,6 +86,62 @@ export function ImageInput({ value, kind, onChange }: { value: string; kind: Ima
         <div className="text-[12px] text-[#1d1b19]/45">Можно перетащить файл сюда</div>
         {error && <div className="text-[12px] text-[#b3261e]">{error}</div>}
       </div>
+    </div>
+  );
+}
+
+/** Выбор иконки: сетка иконок из набора и кнопка «Загрузить свою» — своя картинка вместо иконки. */
+function IconInput({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState('');
+  const custom = value.startsWith('/') ? value : '';
+
+  const upload = async (file: File) => {
+    setBusy(true);
+    setError('');
+    try {
+      const { blob, name } = await prepareImage(file, 'icon');
+      onChange(await api.upload(blob, name));
+    } catch (e) {
+      setError((e as Error).message);
+    } finally {
+      setBusy(false);
+      if (inputRef.current) inputRef.current.value = '';
+    }
+  };
+
+  const tile = (active: boolean) =>
+    `w-10 h-10 rounded-[10px] flex items-center justify-center cursor-pointer border transition-colors ${
+      active ? 'bg-[#1d1b19] border-[#1d1b19] text-white' : 'bg-white border-[#1d1b19]/15 text-[#9a6418] hover:border-[#c98a35]'
+    }`;
+
+  return (
+    <div>
+      <div className="flex flex-wrap gap-1.5">
+        {Object.entries(SITE_ICONS).map(([name, { label, Icon }]) => (
+          <button key={name} type="button" title={label} aria-label={label} aria-pressed={name === value} onClick={() => onChange(name)} className={tile(name === value)}>
+            <Icon className="w-5 h-5" strokeWidth={1.75} />
+          </button>
+        ))}
+        {custom && (
+          <button type="button" title="Своя иконка" aria-label="Своя иконка" aria-pressed className={`${tile(true)} bg-[#eee6d7]!`}>
+            <img src={src(custom)} alt="" className="w-6 h-6 object-contain" />
+          </button>
+        )}
+      </div>
+      <input ref={inputRef} type="file" accept="image/png,image/webp,image/jpeg" className="hidden" onChange={(e) => e.target.files?.[0] && upload(e.target.files[0])} />
+      <button
+        type="button"
+        disabled={busy}
+        onClick={() => inputRef.current?.click()}
+        className="mt-3 inline-flex items-center gap-2 rounded-[10px] border border-[#1d1b19]/20 bg-white px-3.5 py-2 text-[13px] font-semibold disabled:opacity-60 cursor-pointer"
+      >
+        {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <ImagePlus className="w-4 h-4" />}
+        {busy ? 'Загружаю…' : custom ? 'Заменить свою иконку' : 'Загрузить свою'}
+      </button>
+      <div className="text-[12px] text-[#1d1b19]/45 mt-1.5">Своя иконка — PNG или WebP с прозрачным фоном, квадратная. Цвет останется таким, как на картинке.</div>
+      {error && <div className="text-[12px] text-[#b3261e] mt-1">{error}</div>}
     </div>
   );
 }
@@ -398,6 +455,8 @@ export function Fields({ fields, value, onChange }: { fields: Field[]; value: Ob
                       </span>
                     </label>
                   );
+                case 'icon':
+                  return <IconInput value={String(current ?? '')} onChange={set} />;
                 case 'image':
                   return <ImageInput value={String(current ?? '')} kind={field.kind} onChange={set} />;
                 case 'strings':

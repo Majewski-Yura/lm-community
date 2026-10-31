@@ -1,5 +1,6 @@
 import { withBase } from '../lib/base';
 import { C, img } from '../content/store';
+import { DEFAULT_ICONS } from '../lib/siteIcons';
 
 // Тексты, люди, календарь и фото меняются в админке и лежат в src/content/content.json.
 // Здесь — приведение их к виду, который ждут компоненты, и служебные картинки оформления.
@@ -76,9 +77,9 @@ export const INTRO_VIDEO_EMBED_URL: string = C.video.embedUrl;
 
 /** Картинки оформления (логотипы, линии, иконки) — не меняются в админке. */
 export const ASSETS = {
-  headerLogo: withBase('/images/logo-yellow.svg'),
-  footerLogo: withBase('/images/d8d0282b.svg'),
-  heroWordmark: withBase('/images/0753a3e6.svg'),
+  headerLogo: img(C.brand?.logo) ?? withBase('/images/logo-yellow.svg'),
+  footerLogo: img(C.brand?.footerLogo) ?? withBase('/images/d8d0282b.svg'),
+  heroWordmark: img(C.brand?.wordmark) ?? withBase('/images/0753a3e6.svg'),
   heroCrowdPhoto: img(C.hero.photo) ?? withBase('/images/hero-community.webp'),
   videoPoster: img(C.video.poster) ?? withBase('/images/morozova-video.webp'),
   lineSand: withBase('/images/c8392eea.svg'),
@@ -116,7 +117,11 @@ export const NAV_LINKS = [
 const pad2 = (n: number) => String(n).padStart(2, '0');
 const person = (p: { name: string; position: string; photo?: string }): PersonCard => ({ ...p, photo: img(p.photo) });
 
-export const WHO_ROLES: readonly string[] = C.who.roles;
+/** Роли «Для кого»: в старом содержимом роль — просто строка, в новом — название и иконка. */
+export const WHO_ROLE_ITEMS: { title: string; icon: string }[] = (C.who.roles as unknown as (string | { title: string; icon?: string })[]).map((r, i) =>
+  typeof r === 'string' ? { title: r, icon: DEFAULT_ICONS.roles[i % 4] } : { title: r.title, icon: r.icon || DEFAULT_ICONS.roles[i % 4] },
+);
+export const WHO_ROLES: readonly string[] = WHO_ROLE_ITEMS.map((r) => r.title);
 export const PARTICIPANTS: PersonCard[] = C.participants.items.map(person);
 export const TESTIMONIALS: Testimonial[] = C.testimonials.items;
 export const CAN_DO: CanDoItem[] = C.canDo.items;

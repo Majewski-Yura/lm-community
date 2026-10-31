@@ -1,11 +1,9 @@
 import React, { useRef, useState } from 'react';
 import { C } from '../content/store';
-import { BriefcaseMedical, Building2, Play, Stethoscope, Users, type LucideIcon } from 'lucide-react';
-import { ASSETS, INTRO_VIDEO_EMBED_URL, JOIN_URL, WHO_ROLES } from '../data/siteContent';
+import { Play } from 'lucide-react';
+import { SiteIcon } from './SiteIcon';
+import { ASSETS, INTRO_VIDEO_EMBED_URL, JOIN_URL, WHO_ROLE_ITEMS } from '../data/siteContent';
 import { Eyebrow, JoinButton } from './ui';
-
-/** Иконки ролей по порядку WHO_ROLES: главврачи, заведующие, меддиректора, CEO и основатели. */
-const ROLE_ICONS: LucideIcon[] = [Stethoscope, Users, BriefcaseMedical, Building2];
 
 interface HeroIntroProps {
   onNavigateAnchor: (href: string) => void;
@@ -188,8 +186,7 @@ export const HeroIntro: React.FC<HeroIntroProps> = ({ onNavigateAnchor }) => {
             <div className="mt-7 sm:mt-10 lg:mt-[56px] grid grid-cols-1 lg:grid-cols-12 gap-6">
               {/* 4 Roles Badges */}
               <div className="lg:col-span-5 grid grid-cols-2 gap-4">
-                {WHO_ROLES.map((role, i) => {
-                  const Icon = ROLE_ICONS[i % ROLE_ICONS.length];
+                {WHO_ROLE_ITEMS.map(({ title: role, icon }, i) => {
                   return (
                   <div
                     key={role + i}
@@ -197,7 +194,7 @@ export const HeroIntro: React.FC<HeroIntroProps> = ({ onNavigateAnchor }) => {
                     style={{ backgroundColor: ['#eee6d7', '#dec69a', '#dec69a', '#f9cd60'][i % 4] }}
                   >
                     <span className="w-11 h-11 rounded-[12px] bg-[#020201]/[0.07] flex items-center justify-center">
-                      <Icon className="w-[22px] h-[22px] text-[#020201]/80" strokeWidth={1.75} aria-hidden="true" />
+                      <SiteIcon name={icon} fallback="stethoscope" className="w-[22px] h-[22px] text-[#020201]/80" />
                     </span>
                     <span className="mt-4 font-headline text-[#020201] text-[15px] min-[360px]:text-[16px] min-[400px]:text-[18px] sm:text-[20px] font-semibold leading-[1.2] break-words">
                       {role}

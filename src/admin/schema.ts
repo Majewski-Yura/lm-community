@@ -8,6 +8,7 @@ export type Field =
   | { key: string; label: string; type: 'image'; kind: ImageKind; help?: string }
   | { key: string; label: string; type: 'select'; options: { value: string; label: string }[]; help?: string }
   | { key: string; label: string; type: 'checkbox'; help?: string }
+  | { key: string; label: string; type: 'icon'; help?: string }
   | { key: string; label: string; type: 'strings'; itemLabel: string; help?: string; multiline?: boolean }
   | {
       key: string;
@@ -238,7 +239,18 @@ export const SECTIONS: Section[] = [
       eyebrow,
       title,
       { key: 'lead', label: 'Подзаголовок', type: 'textarea', rows: 2 },
-      { key: 'roles', label: 'Роли (4 карточки)', type: 'strings', itemLabel: 'Роль' },
+      {
+        key: 'roles',
+        label: 'Роли (4 карточки)',
+        type: 'list',
+        title: (item) => String(item.title || 'Без названия'),
+        addLabel: 'Добавить роль',
+        newItem: () => ({ title: '', icon: 'stethoscope' }),
+        fields: [
+          { key: 'title', label: 'Роль', type: 'text' },
+          { key: 'icon', label: 'Иконка', type: 'icon' },
+        ],
+      },
       { key: 'cardTitle', label: 'Белая карточка: заголовок', type: 'textarea', rows: 2 },
       { key: 'cardText', label: 'Белая карточка: текст', type: 'textarea', rows: 3 },
       { key: 'cardAccent', label: 'Белая карточка: выделенный текст', type: 'textarea', rows: 3 },
@@ -283,10 +295,11 @@ export const SECTIONS: Section[] = [
         type: 'list',
         title: (item) => String(item.title || 'Без названия'),
         addLabel: 'Добавить пункт',
-        newItem: () => ({ title: '', text: '' }),
+        newItem: () => ({ title: '', text: '', icon: 'sparkles' }),
         fields: [
           { key: 'title', label: 'Заголовок', type: 'text' },
           { key: 'text', label: 'Текст', type: 'textarea', rows: 3 },
+          { key: 'icon', label: 'Иконка', type: 'icon' },
         ],
       },
     ],
@@ -356,7 +369,17 @@ export const SECTIONS: Section[] = [
       },
     ],
   },
-  { id: 'cta', title: 'Призыв вступить', fields: [eyebrow, title, { key: 'accent', label: 'Выделенная строка', type: 'text' }, { key: 'text', label: 'Текст', type: 'textarea', rows: 2 }] },
+  {
+    id: 'cta',
+    title: 'Призыв вступить',
+    fields: [
+      eyebrow,
+      title,
+      { key: 'accent', label: 'Выделенная строка', type: 'text' },
+      { key: 'text', label: 'Текст', type: 'textarea', rows: 2 },
+      { key: 'photo', label: 'Фото на фоне', type: 'image', kind: 'photo', help: 'Сайт сильно затемнит его. Если пусто — берётся большое фото из шапки.' },
+    ],
+  },
   {
     id: 'values',
     title: 'Ценности',
@@ -370,10 +393,11 @@ export const SECTIONS: Section[] = [
         type: 'list',
         title: (item) => String(item.title || 'Без названия'),
         addLabel: 'Добавить ценность',
-        newItem: () => ({ title: '', description: '' }),
+        newItem: () => ({ title: '', description: '', icon: 'sparkles' }),
         fields: [
           { key: 'title', label: 'Название', type: 'text' },
           { key: 'description', label: 'Описание', type: 'textarea', rows: 2 },
+          { key: 'icon', label: 'Иконка', type: 'icon' },
         ],
       },
     ],
@@ -428,6 +452,16 @@ export const SECTIONS: Section[] = [
     id: 'links',
     title: 'Ссылка «Вступить»',
     fields: [{ key: 'join', label: 'Куда ведут все кнопки «Вступить»', type: 'url', help: 'Например, Telegram-бот сообщества.' }],
+  },
+  {
+    id: 'brand',
+    title: 'Логотипы',
+    hint: 'Лучше всего — PNG или WebP с прозрачным фоном, светлый знак: сайт показывает логотипы на тёмном фоне.',
+    fields: [
+      { key: 'logo', label: 'Логотип в шапке', type: 'image', kind: 'photo' },
+      { key: 'wordmark', label: 'Большая надпись на главном экране', type: 'image', kind: 'photo' },
+      { key: 'footerLogo', label: 'Логотип в подвале', type: 'image', kind: 'photo' },
+    ],
   },
   { id: 'footer', title: 'Подвал сайта', fields: [{ key: 'legal', label: 'Реквизиты', type: 'strings', itemLabel: 'Строка' }] },
 ];

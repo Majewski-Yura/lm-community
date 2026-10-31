@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
+  Award,
   BadgeRussianRuble,
   BookOpen,
   CalendarDays,
@@ -8,9 +9,10 @@ import {
   Clapperboard,
   Crown,
   ExternalLink,
+  Flag,
   Footprints,
+  Gem,
   GraduationCap,
-  Heart,
   History,
   Images,
   LayoutTemplate,
@@ -30,7 +32,6 @@ import {
   Sparkles,
   Star,
   Target,
-  UserRound,
   Users,
   X,
   type LucideIcon,
@@ -41,6 +42,7 @@ import { Guide } from './Guide';
 import { publishSite } from './publish';
 import { SECTIONS } from './schema';
 import defaults from '../content/content.json';
+import { DEFAULT_ICONS } from '../lib/siteIcons';
 
 /** Иконки разделов в меню слева. */
 const SECTION_ICONS: Record<string, LucideIcon> = {
@@ -53,19 +55,20 @@ const SECTION_ICONS: Record<string, LucideIcon> = {
   participants: Users,
   testimonials: MessageSquareQuote,
   canDo: Sparkles,
-  experts: Star,
+  experts: Award,
   communityHas: LayoutTemplate,
   communityExtra: Footprints,
   tariff: BadgeRussianRuble,
   gallery: Images,
   founders: Crown,
   cta: Megaphone,
-  values: Heart,
+  values: Gem,
   ecosystem: Network,
-  final: UserRound,
+  final: Flag,
   seo: Search,
   links: Link2,
   footer: PanelBottom,
+  brand: Star,
 };
 
 type Content = Record<string, unknown>;
@@ -89,6 +92,26 @@ export function slugify(text: string): string {
 }
 
 /** Перед сохранением: адреса записей блога и проверка ошибок, которые сломали бы сайт. */
+/** Содержимое, сохранённое прошлой версией админки, приводим к нынешнему виду. */
+function migrate(content: Content): Content {
+  type Items = { items?: Record<string, unknown>[] };
+  const withIcons = (block: unknown, icons: string[]) => {
+    const b = (block ?? {}) as Items;
+    return { ...b, items: (b.items ?? []).map((it, i) => (it.icon ? it : { ...it, icon: icons[i % icons.length] })) };
+  };
+  const who = (content.who ?? {}) as { roles?: unknown[] };
+  const roles = (who.roles ?? []).map((r, i) => {
+    const role = typeof r === 'string' ? { title: r } : (r as Record<string, unknown>);
+    return role.icon ? role : { ...role, icon: DEFAULT_ICONS.roles[i % 4] };
+  });
+  return {
+    ...content,
+    who: { ...who, roles },
+    canDo: withIcons(content.canDo, DEFAULT_ICONS.canDo),
+    values: withIcons(content.values, DEFAULT_ICONS.values),
+  };
+}
+
 /** Адреса, занятые другими страницами и служебными папками сайта. */
 const RESERVED_SLUGS = ['blog', 'diagnostic', 'anketa', 'home', 'admin', 'api', 'private', 'uploads', 'images', 'assets', 'fonts', 'index', 'privacy-policy', 'oferta', 'pravila', 'soglasie-na-obrabotku'];
 
@@ -304,7 +327,7 @@ export function AdminApp() {
       const s = await api.state();
       setState(s);
       // Разделы, которых нет в сохранённом содержимом (появились в новой версии сайта), берём по умолчанию
-      if (s.authed) setContent({ ...(defaults as Content), ...(await api.content()) });
+      if (s.authed) setContent(migrate({ ...(defaults as Content), ...(await api.content()) }));
     } catch (e) {
       setStatus({ text: (e as Error).message, tone: 'error' });
     }

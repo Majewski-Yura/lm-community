@@ -3,7 +3,7 @@ import { CALENDAR_EVENTS, CALENDAR_TITLE, FORMAT_META, PLACE_META } from '../dat
 import { OG_IMAGE, PAGES, SITE_NAME, SITE_URL, homeStructuredData, type PageMeta } from '../data/seo';
 
 export { PAGES };
-import { EXPERTS, FOUNDERS, PARTICIPANTS } from '../data/siteContent';
+import { EXPERTS, FOUNDERS, PARTICIPANTS, WHO_ROLES } from '../data/siteContent';
 import { BLOG_POSTS, findBlogPost } from '../data/blog';
 import { markdownToPlain } from '../components/Markdown';
 
@@ -139,7 +139,7 @@ export function llmsTxt(): string {
 ${plain(C.hero.subtitle)}. ${plain(C.hero.lead)}.
 
 ## Для кого
-${C.who.roles.map((r) => `- ${plain(r)}`).join('\n')}
+${WHO_ROLES.map((r) => `- ${plain(r)}`).join('\n')}
 
 ## Что есть в сообществе
 ${[...C.communityHas.items, ...C.communityExtra.items].map((i) => `- ${plain(i.title)} — ${plain(i.frequency)}`).join('\n')}
@@ -167,7 +167,7 @@ export function llmsFullTxt(): string {
   const list = (items: string[]) => items.map((i) => `- ${plain(i)}`).join('\n');
   return [
     `# ${SITE_NAME}\n\n> ${plain(C.seo.description)}\n\nСайт: ${SITE_URL}\nВступить в сообщество: ${C.links.join}\n`,
-    section(C.who.title, `${plain(C.who.lead)}\n\n${list(C.who.roles)}\n\n${plain(C.who.cardTitle)} ${plain(C.who.cardText)} ${plain(C.who.cardAccent)}`),
+    section(C.who.title, `${plain(C.who.lead)}\n\n${list([...WHO_ROLES])}\n\n${plain(C.who.cardTitle)} ${plain(C.who.cardText)} ${plain(C.who.cardAccent)}`),
     section(C.canDo.title, C.canDo.items.map((i) => `### ${plain(i.title)}\n${plain(i.text)}`).join('\n\n')),
     section(C.communityHas.title, C.communityHas.items.map((i) => `### ${plain(i.title)} (${plain(i.frequency)})\n${plain(i.description)}`).join('\n\n')),
     section(C.communityExtra.title, C.communityExtra.items.map((i) => `### ${plain(i.title)} (${plain(i.frequency)})\n${plain(i.description)}`).join('\n\n')),

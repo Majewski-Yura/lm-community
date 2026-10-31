@@ -7,12 +7,15 @@ export type ImageKind =
   /** Фото в карточке: 16:10, 1280 px по ширине. */
   | 'card'
   /** Большое фото (шапка, галерея, блог): до 2000 px по длинной стороне, без обрезки. */
-  | 'photo';
+  | 'photo'
+  /** Своя иконка: до 256 px, без обрезки, прозрачный фон сохраняется. */
+  | 'icon';
 
 const SIZES: Record<ImageKind, { width: number; height?: number }> = {
   avatar: { width: 600, height: 600 },
   card: { width: 1280, height: 800 },
   photo: { width: 2000 },
+  icon: { width: 256 },
 };
 
 function toBlob(canvas: HTMLCanvasElement, type: string, quality: number): Promise<Blob | null> {

@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
 import { C } from '../content/store';
-import { ChevronDown, HeartPulse, MessagesSquare, PiggyBank, Quote, Scale, UsersRound, type LucideIcon } from 'lucide-react';
+import { ChevronDown, Quote } from 'lucide-react';
+import { DEFAULT_ICONS } from '../lib/siteIcons';
+import { SiteIcon } from './SiteIcon';
 import { ASSETS, CAN_DO, EXPERTS, PARTICIPANTS, TESTIMONIALS } from '../data/siteContent';
 import { Avatar, Eyebrow, MobileSwiper } from './ui';
 
 /** Сколько карточек показываем на телефоне до нажатия «Показать всех». На планшете и компьютере видны все. */
 const MOBILE_VISIBLE = 6;
-
-/** Иконки блока «Зачем сообщество» по порядку CAN_DO: сравнить опыт, сэкономить, защититься, кадры, выгорание. */
-const CAN_DO_ICONS: LucideIcon[] = [MessagesSquare, PiggyBank, Scale, UsersRound, HeartPulse];
 
 const mobileHidden = (index: number, expanded: boolean) => !expanded && index >= MOBILE_VISIBLE;
 
@@ -113,7 +112,6 @@ export const PeopleSections: React.FC = () => {
 
           <MobileSwiper tone="dark" className="mt-7 sm:mt-10 lg:mt-[56px] sm:grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 sm:gap-6">
             {CAN_DO.map((item, i) => {
-              const Icon = CAN_DO_ICONS[i];
               const accent = i === CAN_DO.length - 1;
               return (
               <article
@@ -123,7 +121,11 @@ export const PeopleSections: React.FC = () => {
                 }`}
               >
                 <span className={`w-12 h-12 rounded-[12px] flex items-center justify-center ${accent ? 'bg-[#020201]/[0.08]' : 'bg-[#eee6d7]'}`}>
-                  <Icon className={`w-6 h-6 ${accent ? 'text-[#020201]/80' : 'text-[#d28802]'}`} strokeWidth={1.75} aria-hidden="true" />
+                  <SiteIcon
+                    name={(item as { icon?: string }).icon}
+                    fallback={DEFAULT_ICONS.canDo[i % DEFAULT_ICONS.canDo.length]}
+                    className={`w-6 h-6 ${accent ? 'text-[#020201]/80' : 'text-[#d28802]'}`}
+                  />
                 </span>
                 <h3 className="mt-5 font-headline text-[#020201] text-[20px] font-semibold leading-[1.3]">
                   {item.title}
